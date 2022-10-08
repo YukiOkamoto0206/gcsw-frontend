@@ -21,7 +21,7 @@ export default class UserList extends Component {
     }
 
     componentDidMount() {
-        axios.get('http://localhost:2000/users/')
+        axios.get('https://gcsw-backend.herokuapp.com/users/')
             .then(response => {
                 this.setState({users: response.data})
             })
@@ -31,7 +31,7 @@ export default class UserList extends Component {
     }
 
     deleteUser(id) {
-        axios.delete('http://localhost:2000/users/'+id)
+        axios.delete('https://gcsw-backend.herokuapp.com/users/'+id)
             .then(res => console.log(res.data));
 
         this.setState({

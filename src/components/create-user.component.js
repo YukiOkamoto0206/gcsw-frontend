@@ -29,9 +29,9 @@ export default class CreateUser extends Component {
         console.log(user);
 
         // replace url with Heroku link
-        axios.post('http://localhost:2000/users/add', user)
+        axios.post('https://gcsw-backend.herokuapp.com/users/add', user)
             .then(res => console.log(res.data));
-            
+
         this.setState({
             username: ''
         })
