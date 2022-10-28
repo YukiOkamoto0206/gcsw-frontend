@@ -18,60 +18,131 @@ class ParticipantSignin extends Component {
         this.onChangeDate = this.onChangeDate.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
 
+        // default values of form fields
         this.state = {
             participant_id: '',
             first_name: '',
             last_name: '',
             gender: '',
-            age: 0,
+            age: 1,
             school: '',
             objective: '',
-            date: new Date()
+            date: new Date() // defaults to current date
         }
     }
 
-    onChangeId(e) {
+    // checks if entered date is today's date
+    isToday(date) {
+        const today = new Date();
+        const d = new Date(date);
+
+        console.log(today);
+        console.log(d);
+
+        return d.getDate() === today.getDate() && d.getMonth() === today.getMonth() && d.getFullYear() === today.getFullYear();
+    }
+
+    /**
+     * checks if the participant has signed in once before
+     */
+    async onChangeId(e) {
+        const { getAccessTokenSilently } = this.props.auth0;
+
+        const token = await getAccessTokenSilently();
+
+        axios.get(`${process.env.REACT_APP_SERVER_URL}/participants/${e.target.value}`, {
+            headers: {
+                authorization: `Bearer ${token}`,
+            }
+            })
+            .then(response => {
+                // if only one participant is returned, then they are in the database
+                if (response.data[1] === undefined) {
+                    const date = response.data[0].dates[response.data[0].dates.length - 1];
+
+                    // update field forms with participant credentials
+                    this.setState({
+                        first_name: response.data[0].first_name,
+                        last_name: response.data[0].last_name,
+                        gender: response.data[0].gender,
+                        age: response.data[0].age,
+                        school: response.data[0].school
+                    });
+
+
+                    if (this.isToday(date)) {
+                        console.log('yes');
+                    } else {
+                        console.log('no');
+                    }
+                }  
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+        
         this.setState({
             participant_id: e.target.value
         });
     }
 
+    /**
+     * update first name
+     */
     onChangeFirstName(e) {
         this.setState({
             first_name: e.target.value
         });
     }
 
+    /**
+     * update last name
+     */
     onChangeLastName(e) {
         this.setState({
             last_name: e.target.value
         });
     }
 
+    /**
+     * update gender
+     */
     onChangeGender(e) {
         this.setState({
             gender: e.target.value
         });
     }
 
+    /**
+     * update age
+     */
     onChangeAge(e) {
         this.setState({
             age: e.target.value
         });
     }
 
+    /**
+     * update school
+     */
     onChangeSchool(e) {
         this.setState({
             school: e.target.value
         });
     }
 
+    /**
+     * update objective
+     */
     onChangeObjective(e) {
         this.setState({
             objective: e.target.value
         });
     }
 
+    /**
+     * update date
+     */
     onChangeDate(date) {
         this.setState({
             date: date
@@ -96,9 +167,7 @@ class ParticipantSignin extends Component {
             date: this.state.date,
         }
 
-        console.log(participant);
-
-        axios.post(`${process.env.REACT_APP_SERVER_URL}/participants/add`, participant, {
+        axios.post(`${process.env.REACT_APP_SERVER_URL}/participants/signin`, participant, {
             headers: {
                 authorization: `Bearer ${token}`,
             }
@@ -106,10 +175,11 @@ class ParticipantSignin extends Component {
             .then(response => {
                 alert("Participant has signed in!");
                 console.log(response.data);
+                window.location = '/';
             })
             .catch((error) => {
                 console.log(error);
-            })
+            });
         
     }
 
@@ -125,8 +195,8 @@ class ParticipantSignin extends Component {
                             required
                             className="form-control" 
                             placeholder="Enter ID here"
-                            value={this.state.participant_id} 
-                            onChange={this.onChangeId} />
+                            defaultValue={this.state.participant_id} 
+                            onBlur={this.onChangeId} />
                     </div>
                     <div className="form-group">
                         <label>First Name / Nombre de Pila:</label>
@@ -155,7 +225,7 @@ class ParticipantSignin extends Component {
                             className="form-control"
                             value={this.state.gender}
                             onChange={this.onChangeGender}>
-                            <option value="">Gender</option>
+                            <option value="">Choose a gender</option>
                             <option value="male">Male</option>
                             <option value="female">Female</option>
                             <option value="decline">Decline to say</option>
@@ -164,10 +234,12 @@ class ParticipantSignin extends Component {
                     <div className="form-group">
                         <label>Age / Edad:</label>
                         <input
-                            type="text"
+                            type="number"
                             required
                             className="form-control"
                             placeholder="Enter age here"
+                            min="1"
+                            max="99"
                             value={this.state.age}
                             onChange={this.onChangeAge}/>
                     </div>
@@ -178,7 +250,7 @@ class ParticipantSignin extends Component {
                             className="form-control"
                             value={this.state.school}
                             onChange={this.onChangeSchool}>
-                            <option value="">School</option>
+                            <option value="">Choose a school</option>
                             <option value="Greenfield High">Greenfield High School (GHS)</option>
                             <option value="Vista Verde">Vista Verde Middle School (VVMS)</option>
                             <option value="Oak Avenue">Oak Avenue Elementary School (OAK)</option>
@@ -199,6 +271,7 @@ class ParticipantSignin extends Component {
                         <div>
                             <ReactDatePicker
                                 className="input"
+                                required
                                 placeholderText="Select date"
                                 onChange={this.onChangeDate}
                                 selected={this.state.date}
