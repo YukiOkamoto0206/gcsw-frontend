@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import axios from "axios";
-import { useAuth0, withAuth0 } from "@auth0/auth0-react";
+import { withAuth0 } from "@auth0/auth0-react";
 import { Table } from "react-bootstrap";
 
 const Participant = props => (
@@ -11,10 +11,11 @@ const Participant = props => (
         <td>{props.participant.gender}</td>
         <td>{props.participant.age}</td>
         <td>{props.participant.school}</td>
-        <td>{props.participant.dates[props.participant.dates.length - 1]}</td>
+        <td>{props.participant.dates[props.participant.dates.length - 1]}</td> 
     </tr>
 )
 
+// TODO: Finish this component
 class ParticipantList extends Component {
 
     constructor(props) {
@@ -23,11 +24,15 @@ class ParticipantList extends Component {
         this.state = {participants: []};
     }
 
+    /**
+     * 
+     */
     async componentDidMount() {
         const { getAccessTokenSilently } = this.props.auth0;
 
         const token = await getAccessTokenSilently();
         
+        //
         axios.get(`${process.env.REACT_APP_SERVER_URL}/participants`, { 
             headers: {
                 authorization: `Bearer ${token}`,
@@ -42,6 +47,10 @@ class ParticipantList extends Component {
             });
     }
 
+    /**
+     * 
+     * @returns 
+     */
     participantList() {
         return this.state.participants.map(currentParticipant => {
             return <Participant participant={currentParticipant} key={currentParticipant.participant_id}/>;

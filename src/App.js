@@ -26,7 +26,7 @@ const App = () => {
           <Routes>
             <Route path="/" exact element={<ParticipantSignin />} />
             <Route element={<ProtectedRoute />} >
-                <Route path="/users" element={<ParticipantList />} />
+                <Route path="/participants" element={<ParticipantList />} />
                 <Route path="/create" element={<CreateUser />}  />
             </Route>
           </Routes>

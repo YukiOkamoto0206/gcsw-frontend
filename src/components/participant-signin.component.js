@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import axios from "axios";
-import { useAuth0, withAuth0 } from "@auth0/auth0-react";
-import ReactDatePicker, { DatePicker } from "react-datepicker";
+import { withAuth0 } from "@auth0/auth0-react";
+import ReactDatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css"
 
 class ParticipantSignin extends Component {
@@ -50,6 +50,7 @@ class ParticipantSignin extends Component {
 
         const token = await getAccessTokenSilently();
 
+        // get request with participant id as the parameter
         axios.get(`${process.env.REACT_APP_SERVER_URL}/participants/${e.target.value}`, {
             headers: {
                 authorization: `Bearer ${token}`,
@@ -69,9 +70,10 @@ class ParticipantSignin extends Component {
                         school: response.data[0].school
                     });
 
-
+                    // check if the participant has already signed in for today
                     if (this.isToday(date)) {
                         console.log('yes');
+                        
                     } else {
                         console.log('no');
                     }
@@ -271,6 +273,7 @@ class ParticipantSignin extends Component {
                         <div>
                             <ReactDatePicker
                                 className="input"
+                                id="date-picker"
                                 required
                                 placeholderText="Select date"
                                 onChange={this.onChangeDate}
