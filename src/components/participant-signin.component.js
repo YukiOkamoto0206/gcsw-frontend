@@ -33,13 +33,10 @@ class ParticipantSignin extends Component {
 
     // checks if entered date is today's date
     isToday(date) {
-        const today = new Date();
-        const d = new Date(date);
+        let today = new Date();
+        today = today.toDateString();
 
-        console.log(today);
-        console.log(d);
-
-        return d.getDate() === today.getDate() && d.getMonth() === today.getMonth() && d.getFullYear() === today.getFullYear();
+        return date === today;
     }
 
     /**
