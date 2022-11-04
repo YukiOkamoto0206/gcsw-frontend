@@ -3,6 +3,7 @@ import axios from "axios";
 import { withAuth0 } from "@auth0/auth0-react";
 import { Table } from "react-bootstrap";
 import ReactDatePicker from "react-datepicker";
+import { Link } from "react-router-dom";
 
 const Participant = props => (
     <tr>
@@ -13,7 +14,10 @@ const Participant = props => (
         <td>{props.participant.age}</td>
         <td>{props.participant.school}</td>
         <td>{props.participant.objectives[props.participant.objectives.length - 1]}</td>
-        <td>{props.date}</td>
+        <td>{props.day}</td>
+        <td>
+            <Link to={"/edit/"+props.participant._id}>edit</Link> | <a href="#" onClick={() => { props.deleteEntry(props.participant._id, props.date) }}>delete</a>
+        </td>
     </tr>
 )
 
@@ -24,6 +28,7 @@ class ParticipantList extends Component {
         super(props);
 
         this.onChangeDate = this.onChangeDate.bind(this);
+        this.deleteEntry = this.deleteEntry.bind(this);
 
         this.state = {
             participants: [],
@@ -63,6 +68,29 @@ class ParticipantList extends Component {
             });
     }
 
+    async deleteEntry(id, date) {
+        const { getAccessTokenSilently } = this.props.auth0;
+
+        const token = await getAccessTokenSilently();
+
+        //
+        axios.put(`${process.env.REACT_APP_SERVER_URL}/participants/delete_entry/${id}/${date}`, {
+            headers: {
+                authorization: `Bearer ${token}`,
+            }
+            })
+            .then(response => {
+                console.log(response.data);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+
+            this.setState({
+                participants: this.state.participants.filter(el => el._id !== id && el.date !== date)
+            });
+    }
+
     /**
      * 
      * @returns 
@@ -71,7 +99,9 @@ class ParticipantList extends Component {
         return this.state.participants.map(currentParticipant => {
             const weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
-            return <Participant date={weekday[this.state.date.getUTCDate()]} participant={currentParticipant} key={currentParticipant.participant_id}/>;
+            console.log(this.state.date.toDateString())
+
+            return <Participant date={this.state.date.toDateString()} day={weekday[this.state.date.getUTCDate()]} participant={currentParticipant} deleteEntry={this.deleteEntry} key={currentParticipant.participant_id}/>;
         })
     }
 
@@ -102,6 +132,7 @@ class ParticipantList extends Component {
                             <th>School</th>
                             <th>Latest Objective</th>
                             <th>Day</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
