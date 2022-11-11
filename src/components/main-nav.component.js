@@ -10,16 +10,10 @@ const MainNav = () => (
             Home
         </NavLink>
         <NavLink
-            to="/users"
+            to="/participants"
             className="nav-link"
         >
-            Users
-        </NavLink>
-        <NavLink
-            to="/create"
-            className="nav-link"
-        >
-            Create User
+            Participants
         </NavLink>
     </div>
 );

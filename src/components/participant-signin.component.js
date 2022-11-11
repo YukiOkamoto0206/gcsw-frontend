@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import axios from "axios";
-import { useAuth0, withAuth0 } from "@auth0/auth0-react";
-import ReactDatePicker, { DatePicker } from "react-datepicker";
+import { withAuth0 } from "@auth0/auth0-react";
+import ReactDatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css"
 
 class ParticipantSignin extends Component {
@@ -33,13 +33,10 @@ class ParticipantSignin extends Component {
 
     // checks if entered date is today's date
     isToday(date) {
-        const today = new Date();
-        const d = new Date(date);
+        let today = new Date();
+        today = today.toDateString();
 
-        console.log(today);
-        console.log(d);
-
-        return d.getDate() === today.getDate() && d.getMonth() === today.getMonth() && d.getFullYear() === today.getFullYear();
+        return date === today;
     }
 
     /**
@@ -50,6 +47,7 @@ class ParticipantSignin extends Component {
 
         const token = await getAccessTokenSilently();
 
+        // get request with participant id as the parameter
         axios.get(`${process.env.REACT_APP_SERVER_URL}/participants/${e.target.value}`, {
             headers: {
                 authorization: `Bearer ${token}`,
@@ -58,7 +56,9 @@ class ParticipantSignin extends Component {
             .then(response => {
                 // if only one participant is returned, then they are in the database
                 if (response.data[1] === undefined) {
-                    const date = response.data[0].dates[response.data[0].dates.length - 1];
+                    let current_date = new Date();
+                    current_date = current_date.toDateString(); 
+                    const map = response.data[0].dates_with_objectives
 
                     // update field forms with participant credentials
                     this.setState({
@@ -69,12 +69,14 @@ class ParticipantSignin extends Component {
                         school: response.data[0].school
                     });
 
-
+                    // check if the participant has already signed in for today
+                    /*
                     if (this.isToday(date)) {
                         console.log('yes');
+                        
                     } else {
                         console.log('no');
-                    }
+                    }*/ 
                 }  
             })
             .catch((error) => {
@@ -164,7 +166,7 @@ class ParticipantSignin extends Component {
             age: this.state.age,
             school: this.state.school,
             objective: this.state.objective,
-            date: this.state.date,
+            date: this.state.date
         }
 
         axios.post(`${process.env.REACT_APP_SERVER_URL}/participants/signin`, participant, {
@@ -186,7 +188,7 @@ class ParticipantSignin extends Component {
     render() {
         return (
             <div>
-                <h1 className="mb-3">Sign In</h1>
+                <h3 className="mb-3">Sign In</h3>
                 <form onSubmit={this.onSubmit}>
                     <div className="form-group">
                         <label>ID:</label>
@@ -271,6 +273,7 @@ class ParticipantSignin extends Component {
                         <div>
                             <ReactDatePicker
                                 className="input"
+                                id="date-picker"
                                 required
                                 placeholderText="Select date"
                                 onChange={this.onChangeDate}

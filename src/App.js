@@ -7,7 +7,7 @@ import ParticipantSignin from "./components/participant-signin.component"
 import Loading from "./components/loading.component";
 import Footer from "./components/footer.component";
 import ProtectedRoute from "./auth/protected-route";
-import UserList from "./components/user-list.component"
+import ParticipantList from "./components/participant-list.component"
 import CreateUser from "./components/create-user.component"; 
 import NavBar from "./components/navbar.component";
 
@@ -26,7 +26,7 @@ const App = () => {
           <Routes>
             <Route path="/" exact element={<ParticipantSignin />} />
             <Route element={<ProtectedRoute />} >
-                <Route path="/users" element={<UserList />} />
+                <Route path="/participants" element={<ParticipantList />} />
                 <Route path="/create" element={<CreateUser />}  />
             </Route>
           </Routes>
