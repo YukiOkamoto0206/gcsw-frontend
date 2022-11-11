@@ -56,7 +56,9 @@ class ParticipantSignin extends Component {
             .then(response => {
                 // if only one participant is returned, then they are in the database
                 if (response.data[1] === undefined) {
-                    const date = response.data[0].dates[response.data[0].dates.length - 1];
+                    let current_date = new Date();
+                    current_date = current_date.toDateString(); 
+                    const map = response.data[0].dates_with_objectives
 
                     // update field forms with participant credentials
                     this.setState({
@@ -68,12 +70,13 @@ class ParticipantSignin extends Component {
                     });
 
                     // check if the participant has already signed in for today
+                    /*
                     if (this.isToday(date)) {
                         console.log('yes');
                         
                     } else {
                         console.log('no');
-                    }
+                    }*/ 
                 }  
             })
             .catch((error) => {
@@ -163,7 +166,7 @@ class ParticipantSignin extends Component {
             age: this.state.age,
             school: this.state.school,
             objective: this.state.objective,
-            date: this.state.date,
+            date: this.state.date
         }
 
         axios.post(`${process.env.REACT_APP_SERVER_URL}/participants/signin`, participant, {
@@ -185,7 +188,7 @@ class ParticipantSignin extends Component {
     render() {
         return (
             <div>
-                <h1 className="mb-3">Sign In</h1>
+                <h3 className="mb-3">Sign In</h3>
                 <form onSubmit={this.onSubmit}>
                     <div className="form-group">
                         <label>ID:</label>

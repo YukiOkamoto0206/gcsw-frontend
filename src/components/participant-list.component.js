@@ -13,8 +13,7 @@ const Participant = props => (
         <td>{props.participant.gender}</td>
         <td>{props.participant.age}</td>
         <td>{props.participant.school}</td>
-        <td>{props.participant.objectives[props.participant.objectives.length - 1]}</td>
-        <td>{props.day}</td>
+        <td>{props.participant.dates_with_objectives[props.date]}</td>
         <td>
             <Link to={"/edit/"+props.participant._id}>edit</Link> | <a href="#" onClick={() => { props.deleteEntry(props.participant._id, props.date) }}>delete</a>
         </td>
@@ -130,8 +129,7 @@ class ParticipantList extends Component {
                             <th>Gender</th>
                             <th>Age</th>
                             <th>School</th>
-                            <th>Latest Objective</th>
-                            <th>Day</th>
+                            <th>Objective of the Day</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
