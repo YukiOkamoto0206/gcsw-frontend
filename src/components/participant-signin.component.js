@@ -31,14 +31,6 @@ class ParticipantSignin extends Component {
         }
     }
 
-    // checks if entered date is today's date
-    isToday(date) {
-        let today = new Date();
-        today = today.toDateString();
-
-        return date === today;
-    }
-
     /**
      * checks if the participant has signed in once before
      */
@@ -56,10 +48,6 @@ class ParticipantSignin extends Component {
             .then(response => {
                 // if only one participant is returned, then they are in the database
                 if (response.data[1] === undefined) {
-                    let current_date = new Date();
-                    current_date = current_date.toDateString(); 
-                    const map = response.data[0].dates_with_objectives
-
                     // update field forms with participant credentials
                     this.setState({
                         first_name: response.data[0].first_name,
