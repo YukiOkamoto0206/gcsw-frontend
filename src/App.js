@@ -8,6 +8,7 @@ import Loading from "./components/loading.component";
 import Footer from "./components/footer.component";
 import ProtectedRoute from "./auth/protected-route";
 import ParticipantList from "./components/participant-list.component"
+import EditParticipant from "./components/edit-participant.component";
 import CreateUser from "./components/create-user.component"; 
 import NavBar from "./components/navbar.component";
 
@@ -28,6 +29,7 @@ const App = () => {
             <Route element={<ProtectedRoute />} >
                 <Route path="/participants" element={<ParticipantList />} />
                 <Route path="/create" element={<CreateUser />}  />
+                <Route path="/edit/:id" element={<EditParticipant />} />
             </Route>
           </Routes>
         </div>

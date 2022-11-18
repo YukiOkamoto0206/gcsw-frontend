@@ -228,9 +228,9 @@ class ParticipantSignin extends Component {
                             value={this.state.gender}
                             onChange={this.onChangeGender}>
                             <option value="">Choose a gender</option>
-                            <option value="male">Male</option>
-                            <option value="female">Female</option>
-                            <option value="decline">Decline to say</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="N/A">Decline to say</option>
                         </select>
                     </div>
                     <div className="form-group">
