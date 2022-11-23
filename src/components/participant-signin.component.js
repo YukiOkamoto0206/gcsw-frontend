@@ -156,7 +156,7 @@ class ParticipantSignin extends Component {
 
         if (this.state.is_signed_in) {
             // snackbar
-            
+
         } else {
             const participant = {
                 participant_id: this.state.participant_id,
