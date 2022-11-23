@@ -1,8 +1,12 @@
 import React, { useEffect } from "react";
 import axios from "axios";
 import { useAuth0, withAuth0 } from "@auth0/auth0-react";
+import { Row, Col, Form, Button } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import { confirmAlert } from "react-confirm-alert";
+
+import 'react-confirm-alert/src/react-confirm-alert.css';
 
 const { useState } = React;
 
@@ -61,105 +65,130 @@ const EditParticipant = () => {
             school: state.school
         };
 
-        axios.put(`${process.env.REACT_APP_SERVER_URL}/participants/edit/${id}`, participant, {
-            headers: {
-                authorization: `Bearer ${token}`
-            }
-        })
-        .then(() => {
-            alert("Participant has been updated!");
-            window.location = `/edit/${id}`;
-        })
-        .catch((error) => {
-            console.log(error);
-        })
+        confirmAlert({
+            title: 'Confirm changes?',
+            message: 'Are you sure you wish to save these changes?',
+            buttons: [
+                {
+                    label: 'Yes',
+                    onClick: () => {
+                        axios.put(`${process.env.REACT_APP_SERVER_URL}/participants/edit/${id}`, participant, {
+                            headers: {
+                                authorization: `Bearer ${token}`
+                            }
+                        })
+                        .then(() => {
+                            alert("Participant has been updated!");
+                            window.location = `/edit/${id}`;
+                        })
+                        .catch((error) => {
+                            console.log(error);
+                        })
+                    }
+                },
+                {
+                    label: 'No'
+                }
+            ]
+        });
     }
 
     const onDelete = async () => {
         const token = await getAccessTokenSilently();
 
-        axios.delete(`${process.env.REACT_APP_SERVER_URL}/participants/delete/${id}`, {
-            headers: {
-                authorization: `Bearer ${token}`
-            }
-        })
-        .then(() => {
-            alert("Participant has been deleted!");
-            window.location = '/participants';
-        })
-        .catch((error) => {
-            console.log(error);
+        confirmAlert({
+            title: 'Confirm deletion?',
+            message: 'Are you sure you wish to delete this participant?',
+            buttons: [
+                {
+                    label: 'Yes',
+                    onClick: () => {
+                        axios.delete(`${process.env.REACT_APP_SERVER_URL}/participants/delete/${id}`, {
+                            headers: {
+                                authorization: `Bearer ${token}`
+                            }
+                        })
+                        .then(() => {
+                            alert("Participant has been deleted!");
+                            window.location = '/participants';
+                        })
+                        .catch((error) => {
+                            console.log(error);
+                        });
+                        alert('Participant has been deleted');
+                    }
+                },
+                {
+                    label: 'No'
+                }
+            ]
         });
     }
 
     return (
         <div>
             <h3 className="mb-3">Edit Participant</h3>
-            <form onSubmit={handleSubmit(onUpdate)}>
-                <div className="form-group">
-                    <label>ID:</label>
-                    <input 
+            <Form method="post">
+                <Form.Group className="mb-3" controlId="formId">
+                    <Form.Label>User ID / ID de Usuario:</Form.Label>
+                    <Form.Control 
                         type="text" 
                         value={state.participant_id}
-                        className="form-control" 
-                        placeholder="Enter ID here"
                         onChange={handleChange}
                         name="participant_id" />
-                </div>
-                <div className="form-group">
-                    <label>First Name:</label>
-                    <input 
-                        type="text" 
-                        value={state.first_name}
-                        className="form-control" 
-                        placeholder="Enter first name here"
-                        onChange={handleChange}
-                        name="first_name" />
-                </div>
-                <div className="form-group">
-                    <label>Last Name:</label>
-                    <input 
-                        type="text" 
-                        value={state.last_name}
-                        className="form-control" 
-                        placeholder="Enter last name here"
-                        onChange={handleChange}
-                        name="last_name" />
-                </div>
-                <div className="form-group">
-                    <label>Gender:</label>
-                    <select 
-                        type="text" 
-                        value={state.gender}
-                        className="form-control" 
-                        placeholder="Enter gender here"
-                        onChange={handleChange}
-                        name="gender">
-                        <option value="">Choose a gender</option>
-                        <option value="Male">Male</option>
-                        <option value="Female">Female</option>
-                        <option value="N/A">Decline to say</option>
-                    </select>
-                </div>
-                <div className="form-group">
-                    <label>Age:</label>
-                    <input 
-                        type="number" 
-                        value={state.age}
-                        className="form-control" 
-                        placeholder="Enter age here"
-                        min="1"
-                        max="99"
-                        onChange={handleChange}
-                        name="age" />
-                </div>
-                <div className="form-group">
-                    <label>School:</label>
-                    <select
+                </Form.Group>
+                <Form.Group className="mb-3" controlId="formName">
+                    <Row>
+                        <Col>
+                            <Form.Label>First Name / Nombre de Pila:</Form.Label>
+                            <Form.Control 
+                                type="text" 
+                                value={state.first_name}
+                                onChange={handleChange}
+                                name="first_name" />
+                        </Col>
+                        <Col>
+                            <Form.Label>Last Name / Apellido:</Form.Label>
+                            <Form.Control 
+                                type="text" 
+                                value={state.last_name}
+                                onChange={handleChange}
+                                name="last_name" />
+                        </Col>
+                    </Row>
+                </Form.Group>
+                <Form.Group className="mb-3">
+                    <Row>
+                        <Col>
+                            <Form.Label>Gender / Género:</Form.Label>
+                            <Form.Control as="select"
+                                type="text" 
+                                value={state.gender}
+                                onChange={handleChange}
+                                name="gender">
+                                <option value="">Gender / Género:</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="N/A">Decline to say</option>
+                            </Form.Control>
+                        </Col>
+                        <Col>
+                            <Form.Label>Age / Edad:</Form.Label>
+                            <Form.Control 
+                                type="number" 
+                                value={state.age}
+                                min="1"
+                                max="99"
+                                onChange={handleChange}
+                                name="age" />
+                        </Col>
+                    </Row>
+                </Form.Group>
+                <Form.Group className="form-group">
+                    <Form.Label>School:</Form.Label>
+                    <Form.Control as="select"
                         type="text" 
                         value={state.school}
-                        className="form-control" 
-                        placeholder="Enter school here"
                         onChange={handleChange}
                         name="school" >
                         <option value="">Choose a school</option>
@@ -168,15 +197,19 @@ const EditParticipant = () => {
                         <option value="Oak Avenue">Oak Avenue Elementary School (OAK)</option>
                         <option value="Mary Chapa">Mary Chapa Academy (MCA)</option>
                         <option value="Cesar Chavez">Cesar Chavez Elementary School (CCE)</option>
-                    </select>
-                </div>
-                <div className="form-group">
-                        <input type="submit" value="Update" className="btn btn-primary" />
-                </div>
-            </form>
-            <form onSubmit={handleSubmit(onDelete)}>
-                <input type="submit" value="Delete" className="btn btn-danger" />
-            </form>
+                    </Form.Control>
+                </Form.Group>
+                <Form.Group className="mb-3">
+                    <Row>
+                        <Col>
+                            <Button variant="primary" onClick={onUpdate}>Update</Button>
+                        </Col>
+                        <Col>
+                            <Button variant="danger" onClick={onDelete}>Delete</Button>
+                        </Col>
+                    </Row>
+                </Form.Group>
+            </Form>
         </div>
     );
 }

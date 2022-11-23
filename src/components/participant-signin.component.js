@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import axios from "axios";
 import { withAuth0 } from "@auth0/auth0-react";
+import { Row, Col, Form, Button } from 'react-bootstrap';
+import { Snackbar } from "@mui/material";
 import ReactDatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css"
 
@@ -27,14 +29,15 @@ class ParticipantSignin extends Component {
             age: 1,
             school: '',
             objective: '',
-            date: new Date() // defaults to current date
+            date: new Date(), // defaults to current date
+            is_signed_in: false
         }
     }
 
     /**
      * checks if the participant has signed in once before
      */
-    async onChangeId(e) {
+    onChangeId = async (e) =>{
         const { getAccessTokenSilently } = this.props.auth0;
 
         const token = await getAccessTokenSilently();
@@ -54,17 +57,9 @@ class ParticipantSignin extends Component {
                         last_name: response.data[0].last_name,
                         gender: response.data[0].gender,
                         age: response.data[0].age,
-                        school: response.data[0].school
-                    });
-
-                    // check if the participant has already signed in for today
-                    /*
-                    if (this.isToday(date)) {
-                        console.log('yes');
-                        
-                    } else {
-                        console.log('no');
-                    }*/ 
+                        school: response.data[0].school,
+                        is_signed_in: this.isToday(response.data[0].dates_with_objectives)
+                    })
                 }  
             })
             .catch((error) => {
@@ -77,9 +72,23 @@ class ParticipantSignin extends Component {
     }
 
     /**
+     * 
+     * @param {*} dates 
+     * @returns 
+     */
+    isToday = (dates) => {
+        let currentDate = new Date();
+        currentDate = currentDate.toDateString();
+
+        console.log(dates[currentDate] !== undefined);
+
+        return dates[currentDate] !== undefined;
+    }
+
+    /**
      * update first name
      */
-    onChangeFirstName(e) {
+    onChangeFirstName = (e) => {
         this.setState({
             first_name: e.target.value
         });
@@ -88,7 +97,7 @@ class ParticipantSignin extends Component {
     /**
      * update last name
      */
-    onChangeLastName(e) {
+    onChangeLastName = (e) => {
         this.setState({
             last_name: e.target.value
         });
@@ -97,7 +106,7 @@ class ParticipantSignin extends Component {
     /**
      * update gender
      */
-    onChangeGender(e) {
+    onChangeGender = (e) => {
         this.setState({
             gender: e.target.value
         });
@@ -106,7 +115,7 @@ class ParticipantSignin extends Component {
     /**
      * update age
      */
-    onChangeAge(e) {
+    onChangeAge = (e) => {
         this.setState({
             age: e.target.value
         });
@@ -115,7 +124,7 @@ class ParticipantSignin extends Component {
     /**
      * update school
      */
-    onChangeSchool(e) {
+    onChangeSchool = (e) => {
         this.setState({
             school: e.target.value
         });
@@ -124,7 +133,7 @@ class ParticipantSignin extends Component {
     /**
      * update objective
      */
-    onChangeObjective(e) {
+    onChangeObjective = (e) => {
         this.setState({
             objective: e.target.value
         });
@@ -133,147 +142,148 @@ class ParticipantSignin extends Component {
     /**
      * update date
      */
-    onChangeDate(date) {
+    onChangeDate = (date) => {
         this.setState({
             date: date
         });
     }
 
-    async onSubmit(e) {
+    onSubmit = async (e) => {
         e.preventDefault();
 
         const { getAccessTokenSilently } = this.props.auth0;
-
         const token = await getAccessTokenSilently();
 
-        const participant = {
-            participant_id: this.state.participant_id,
-            first_name: this.state.first_name,
-            last_name: this.state.last_name,
-            gender: this.state.gender,
-            age: this.state.age,
-            school: this.state.school,
-            objective: this.state.objective,
-            date: this.state.date
-        }
-
-        axios.post(`${process.env.REACT_APP_SERVER_URL}/participants/signin`, participant, {
-            headers: {
-                authorization: `Bearer ${token}`,
+        if (this.state.is_signed_in) {
+            // snackbar
+            
+        } else {
+            const participant = {
+                participant_id: this.state.participant_id,
+                first_name: this.state.first_name,
+                last_name: this.state.last_name,
+                gender: this.state.gender,
+                age: this.state.age,
+                school: this.state.school,
+                objective: this.state.objective,
+                date: this.state.date
             }
-            })
-            .then(response => {
-                alert("Participant has signed in!");
-                console.log(response.data);
-                window.location = '/';
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-        
+
+            axios.post(`${process.env.REACT_APP_SERVER_URL}/participants/signin`, participant, {
+                headers: {
+                    authorization: `Bearer ${token}`,
+                }
+                })
+                .then(response => {
+                    alert("Participant has signed in!");
+                    console.log(response.data);
+                    window.location = '/';
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        }
     }
 
     render() {
         return (
             <div>
                 <h3 className="mb-3">Sign In</h3>
-                <form onSubmit={this.onSubmit}>
-                    <div className="form-group">
-                        <label>ID:</label>
-                        <input 
+                <Form>
+                    <Form.Group className="mb-3" controlId="formId">
+                        <Form.Label>User ID / ID de Usuario:</Form.Label>
+                        <Form.Control 
                             type="text" 
                             required
-                            className="form-control" 
-                            placeholder="Enter ID here"
                             defaultValue={this.state.participant_id} 
                             onBlur={this.onChangeId} />
-                    </div>
-                    <div className="form-group">
-                        <label>First Name / Nombre de Pila:</label>
-                        <input 
-                            type="text"
-                            required
-                            className="form-control"
-                            placeholder="Enter first name here"
-                            value={this.state.first_name}
-                            onChange={this.onChangeFirstName}/>
-                    </div>
-                    <div className="form-group">
-                        <label>Last Name / Apellido:</label>
-                        <input 
-                            type="text"
-                            required
-                            className="form-control"
-                            placeholder="Enter last name here"
-                            value={this.state.last_name}
-                            onChange={this.onChangeLastName}/>
-                    </div>
-                    <div className="form-group">
-                        <select
+                    </Form.Group>
+                    <Form.Group className="mb-3" controlId="formName">
+                        <Row>
+                            <Col>
+                                <Form.Label>First Name / Nombre de Pila:</Form.Label>
+                                <Form.Control 
+                                    type="text"
+                                    required
+                                    value={this.state.first_name}
+                                    onChange={this.onChangeFirstName}/>
+                            </Col>
+                            <Col>
+                                <Form.Label>Last Name / Apellido:</Form.Label>
+                                <Form.Control 
+                                    type="text"
+                                    required
+                                    value={this.state.last_name}
+                                    onChange={this.onChangeLastName}/>
+                            </Col>
+                        </Row>
+                    </Form.Group>
+                    <Form.Group className="mb-3" controlId="formGenderAndAge">
+                        <Row>
+                            <Col>
+                                <Form.Label>Gender / Género:</Form.Label>
+                                <Form.Control as="select"
+                                    ref="userInput"
+                                    required
+                                    value={this.state.gender}
+                                    onChange={this.onChangeGender}>
+                                    <option value="">Gender / Género:</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="N/A">Decline to say</option>
+                                </Form.Control>
+                            </Col>
+                            <Col>
+                                <Form.Label>Age / Edad:</Form.Label>
+                                <Form.Control
+                                    type="number"
+                                    required
+                                    min="1"
+                                    max="99"
+                                    value={this.state.age}
+                                    onChange={this.onChangeAge}/>
+                            </Col>
+                        </Row>
+                    </Form.Group>
+                    <Form.Group className="mb-3" controlId="formSchool">
+                        <Form.Label>School / Escuela:</Form.Label>
+                        <Form.Control as="select"
                             ref="userInput"
                             required
-                            className="form-control"
-                            value={this.state.gender}
-                            onChange={this.onChangeGender}>
-                            <option value="">Choose a gender</option>
-                            <option value="Male">Male</option>
-                            <option value="Female">Female</option>
-                            <option value="N/A">Decline to say</option>
-                        </select>
-                    </div>
-                    <div className="form-group">
-                        <label>Age / Edad:</label>
-                        <input
-                            type="number"
-                            required
-                            className="form-control"
-                            placeholder="Enter age here"
-                            min="1"
-                            max="99"
-                            value={this.state.age}
-                            onChange={this.onChangeAge}/>
-                    </div>
-                    <div className="form-group">
-                        <select
-                            ref="userInput"
-                            required
-                            className="form-control"
                             value={this.state.school}
                             onChange={this.onChangeSchool}>
-                            <option value="">Choose a school</option>
+                            <option value="">School / Escuela</option>
                             <option value="Greenfield High">Greenfield High School (GHS)</option>
                             <option value="Vista Verde">Vista Verde Middle School (VVMS)</option>
                             <option value="Oak Avenue">Oak Avenue Elementary School (OAK)</option>
                             <option value="Mary Chapa">Mary Chapa Academy (MCA)</option>
                             <option value="Cesar Chavez">Cesar Chavez Elementary School (CCE)</option>
-                        </select>
-                    </div>
-                    <div className="form-group">
-                        <label>What do you want to do today? Que quieres hacer hoy?</label>
+                        </Form.Control>
+                    </Form.Group>
+                    <Form.Group className="mb-3" controlId="formObjective">
+                        <Form.Label>What do you want to do today? Que quieres hacer hoy?</Form.Label>
                         <textarea
                             type="text"
                             className="form-control"
                             value={this.state.objective}
                             onChange={this.onChangeObjective}/>
-                    </div>
-                    <div className="form-group">
-                        <label>Date / Fecha:</label>
-                        <div>
-                            <ReactDatePicker
-                                className="input"
-                                id="date-picker"
-                                required
-                                placeholderText="Select date"
-                                onChange={this.onChangeDate}
-                                selected={this.state.date}
+                    </Form.Group>
+                    <Form.Group className="mb-3" controlId="formDate">
+                        <Form.Label>Date / Fecha:</Form.Label>
+                        <ReactDatePicker
+                            className="input"
+                            id="date-picker"
+                            required
+                            placeholderText="Select date"
+                            readOnly={true}
+                            onChange={this.onChangeDate}
+                            selected={this.state.date}
                             />
-                        </div>
-                    </div>
-
-                    <div className="form-group">
-                        <input type="submit" value="Sign in" className="btn btn-primary" />
-                    </div>
-                </form>
+                    </Form.Group>
+                    <Form.Group className="mb-3" controlId="formButton">
+                        <Button variant="primary" type="submit" onClick={this.onSubmit}>Sign In</Button>
+                    </Form.Group>
+                </Form>
             </div>
         )
     }

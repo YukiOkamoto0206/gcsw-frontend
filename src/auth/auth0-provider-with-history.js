@@ -1,27 +1,20 @@
 import React from "react";
-import { useNavigate } from 'react-router-dom';
 import { Auth0Provider } from "@auth0/auth0-react";
 
 const Auth0ProviderWithHistory = ({ children }) => {
-    const domain = process.env.REACT_APP_AUTH0_DOMAIN;
-    const clientId = process.env.REACT_APP_AUTH0_CLIENT_ID;
-    const audience = process.env.REACT_APP_AUTH0_AUDIENCE;
+    const curOrganization = localStorage.getItem('organization_id');
 
-    const navigate = useNavigate();
+    const options = {
+        domain: process.env.REACT_APP_AUTH0_DOMAIN,
+        clientId: process.env.REACT_APP_AUTH0_CLIENT_ID,
+        audience: process.env.REACT_APP_AUTH0_AUDIENCE,
+        redirectUri: window.location.origin,
+        ...(curOrganization ? { organization: curOrganization } : null)
 
-    const onRedirectCallback = (appState) => {
-        navigate.push(appState?.returnTo || window.location.pathname);
     };
 
     return (
-        <Auth0Provider
-            domain={domain}
-            clientId={clientId}
-            redirectUri={window.location.origin}
-            audience={audience}
-        >
-            {children}
-        </Auth0Provider>
+        <Auth0Provider {...options}>{children}</Auth0Provider>
     );
 };
 
