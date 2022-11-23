@@ -77,10 +77,7 @@ class ParticipantSignin extends Component {
      * @returns 
      */
     isToday = (dates) => {
-        let currentDate = new Date();
-        currentDate = currentDate.toDateString();
-
-        console.log(dates[currentDate] !== undefined);
+        const currentDate = this.state.date.toDateString();
 
         return dates[currentDate] !== undefined;
     }
@@ -158,6 +155,7 @@ class ParticipantSignin extends Component {
             // snackbar
 
         } else {
+            console.log(this.state.date);
             const participant = {
                 participant_id: this.state.participant_id,
                 first_name: this.state.first_name,
@@ -166,7 +164,7 @@ class ParticipantSignin extends Component {
                 age: this.state.age,
                 school: this.state.school,
                 objective: this.state.objective,
-                date: this.state.date
+                date: this.state.date.toDateString()
             }
 
             axios.post(`${process.env.REACT_APP_SERVER_URL}/participants/signin`, participant, {
