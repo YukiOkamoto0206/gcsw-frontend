@@ -2,9 +2,10 @@ import React, { useEffect } from "react";
 import axios from "axios";
 import { useAuth0, withAuth0 } from "@auth0/auth0-react";
 import { Row, Col, Form, Button } from "react-bootstrap";
-import { useParams } from "react-router-dom";
+import { Link, Navigate, useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { confirmAlert } from "react-confirm-alert";
+import { useNavigate } from "react-router-dom";
 
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
@@ -25,6 +26,7 @@ const EditParticipant = () => {
     const { register, handleSubmit, formState: { errors }, formState } = useForm();
     const { id } = useParams();
     const { getAccessTokenSilently } = useAuth0();
+    const navigate = useNavigate();
 
     useEffect(() => {
         getUser();
@@ -79,7 +81,7 @@ const EditParticipant = () => {
                         })
                         .then(() => {
                             alert("Participant has been updated!");
-                            window.location = `/edit/${id}`;
+                            navigate(`/edit/${id}`);
                         })
                         .catch((error) => {
                             console.log(error);
@@ -110,12 +112,11 @@ const EditParticipant = () => {
                         })
                         .then(() => {
                             alert("Participant has been deleted!");
-                            window.location = '/participants';
+                            navigate('/participants');
                         })
                         .catch((error) => {
                             console.log(error);
                         });
-                        alert('Participant has been deleted');
                     }
                 },
                 {
