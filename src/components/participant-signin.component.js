@@ -38,14 +38,9 @@ class ParticipantSignin extends Component {
      * checks if the participant has signed in once before
      */
     onChangeId = async (e) =>{
-        const { getAccessTokenSilently } = this.props.auth0;
-
-        const token = await getAccessTokenSilently();
-
         // get request with participant id as the parameter
-        axios.get(`${process.env.REACT_APP_SERVER_URL}/participants/${e.target.value}`, {
+        axios.get(`${process.env.REACT_APP_SERVER_URL}/participants/participant_id/${e.target.value}`, {
             headers: {
-                authorization: `Bearer ${token}`,
             }
             })
             .then(response => {
@@ -148,14 +143,10 @@ class ParticipantSignin extends Component {
     onSubmit = async (e) => {
         e.preventDefault();
 
-        const { getAccessTokenSilently } = this.props.auth0;
-        const token = await getAccessTokenSilently();
-
         if (this.state.is_signed_in) {
             // snackbar
 
         } else {
-            console.log(this.state.date);
             const participant = {
                 participant_id: this.state.participant_id,
                 first_name: this.state.first_name,
@@ -169,7 +160,6 @@ class ParticipantSignin extends Component {
 
             axios.post(`${process.env.REACT_APP_SERVER_URL}/participants/signin`, participant, {
                 headers: {
-                    authorization: `Bearer ${token}`,
                 }
                 })
                 .then(response => {
@@ -251,11 +241,13 @@ class ParticipantSignin extends Component {
                             value={this.state.school}
                             onChange={this.onChangeSchool}>
                             <option value="">School / Escuela</option>
-                            <option value="Greenfield High">Greenfield High School (GHS)</option>
-                            <option value="Vista Verde">Vista Verde Middle School (VVMS)</option>
-                            <option value="Oak Avenue">Oak Avenue Elementary School (OAK)</option>
-                            <option value="Mary Chapa">Mary Chapa Academy (MCA)</option>
-                            <option value="Cesar Chavez">Cesar Chavez Elementary School (CCE)</option>
+                            <option value="Greenfield High School">Greenfield High School (GHS)</option>
+                            <option value="Vista Verde Middle School">Vista Verde Middle School (VVMS)</option>
+                            <option value="Oak Avenue Elementary School">Oak Avenue Elementary School (OAK)</option>
+                            <option value="Mary Chapa Academy">Mary Chapa Academy (MCA)</option>
+                            <option value="Cesar Chavez Elementary School">Cesar Chavez Elementary School (CCE)</option>
+                            <option value="Arroyo Seco Middle School">Arroyo Seco Middle School (ASMS)</option>
+                            <option value="Other / Otra">Other / Otra</option>
                         </Form.Control>
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="formObjective">

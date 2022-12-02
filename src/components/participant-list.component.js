@@ -60,7 +60,8 @@ const Participant = props => (
 const ParticipantList = () => {
     const [state, setState] = useState({
         participants: [],
-        date: new Date()
+        date: new Date(),
+        token: ''
     });
 
     const tableRef = useRef(null);
@@ -89,16 +90,17 @@ const ParticipantList = () => {
             headers: {
                 authorization: `Bearer ${token}`,
             }
-            })
-            .then(response => {
-                setState({
-                    participants: response.data, 
-                    date: date 
-                });
-            })
-            .catch((error) => {
-                console.log(error); 
+        })
+        .then(response => {
+            setState({
+                participants: response.data, 
+                date: date,
+                token: token
             });
+        })
+        .catch((error) => {
+            console.log(error); 
+        });
     }
 
     /**
@@ -107,25 +109,23 @@ const ParticipantList = () => {
      * @param {*} date 
      */
     const deleteEntry = async (id, date) => {
-        const token = await getAccessTokenSilently();
-
-        //
+        // 
         axios.put(`${process.env.REACT_APP_SERVER_URL}/participants/delete_entry/${id}/${date.toDateString()}`, {
             headers: {
-                authorization: `Bearer ${token}`,
+                authorization: `Bearer ${state.token}`,
             }
-            })
-            .then(() => {
-                alert("Entry successfully deleted");
-            })
-            .catch((error) => {
-                console.log(error);
-            });
+        })
+        .then(() => {
+            alert("Entry successfully deleted");
+        })
+        .catch((error) => {
+            console.log(error);
+        });
 
-            setState({
-                participants: state.participants.filter(el => el._id !== id && el.date !== date),
-                date: date
-            });
+        setState({
+            participants: state.participants.filter(el => el._id !== id && el.date !== date),
+            date: date
+        });
     }
 
     /**
