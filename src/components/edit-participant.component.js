@@ -2,8 +2,7 @@ import React, { useEffect } from "react";
 import axios from "axios";
 import { useAuth0, withAuth0 } from "@auth0/auth0-react";
 import { Row, Col, Form, Button } from "react-bootstrap";
-import { Link, Navigate, useParams } from "react-router-dom";
-import { useForm } from "react-hook-form";
+import { useParams } from "react-router-dom";
 import { confirmAlert } from "react-confirm-alert";
 import { useNavigate } from "react-router-dom";
 
@@ -11,7 +10,12 @@ import 'react-confirm-alert/src/react-confirm-alert.css';
 
 const { useState } = React;
 
+/**
+ * React Hook for editing a participant
+ * @returns EditParticipant HTML template
+ */
 const EditParticipant = () => {
+    // default state, set participant fields
     const [state, setState] = useState({
         participant_id: '',
         first_name: '',
@@ -23,41 +27,58 @@ const EditParticipant = () => {
         date: new Date() // defaults to current date
     });
 
-    const { register, handleSubmit, formState: { errors }, formState } = useForm();
+    // grabs participant's Object ID from URL
     const { id } = useParams();
+    // method to retrieve authenticated user's access token
     const { getAccessTokenSilently } = useAuth0();
+    // hook used for navigating pages programmatically
     const navigate = useNavigate();
 
+    /**
+     * On page load, get the participant
+     */
     useEffect(() => {
-        getUser();
+        getParticipant();
     }, [id]);
 
-    const getUser = async () => {
+    /**
+     * Gets the participant's information using their Object ID
+     */
+    const getParticipant = async () => {
         const token = await getAccessTokenSilently();
         
+        // GET request to retrieve participant
         axios.get(`${process.env.REACT_APP_SERVER_URL}/participants/id/${id}`, {
             headers: {
                 authorization: `Bearer ${token}`,
             }
         })
+        // set state variables using response data
         .then(response => setState(response.data))
         .catch((error) => {
             console.log(error);
         });
     }
 
+    /**
+     * Updates state variable being updated in the form
+     * @param {Form.Control Component data} e 
+     */
     const handleChange = e => {
         const { name, value } = e.target;
         setState(prevState => ({
             ...prevState,
             [name]: value
         }));
-        console.log(state);
     }
 
+    /**
+     * Handles update button click
+     */
     const onUpdate = async () => {
         const token = await getAccessTokenSilently();
 
+        // save participant information to object
         const participant = {
             participant_id: state.participant_id,
             first_name: state.first_name,
@@ -67,10 +88,14 @@ const EditParticipant = () => {
             school: state.school
         };
 
+        /**
+         * Confirm alert box
+         */
         confirmAlert({
             title: 'Confirm changes?',
             message: 'Are you sure you wish to save these changes?',
             buttons: [
+                // if yes, send PUT request to update participant
                 {
                     label: 'Yes',
                     onClick: () => {
@@ -88,6 +113,7 @@ const EditParticipant = () => {
                         })
                     }
                 },
+                // else do nothing
                 {
                     label: 'No'
                 }
@@ -95,6 +121,9 @@ const EditParticipant = () => {
         });
     }
 
+    /**
+     * Handles delete button click
+     */
     const onDelete = async () => {
         const token = await getAccessTokenSilently();
 
@@ -102,6 +131,7 @@ const EditParticipant = () => {
             title: 'Confirm deletion?',
             message: 'Are you sure you wish to delete this participant?',
             buttons: [
+                // if yes, send DELETE request to delete the participant
                 {
                     label: 'Yes',
                     onClick: () => {
@@ -119,6 +149,7 @@ const EditParticipant = () => {
                         });
                     }
                 },
+                // else, do nothing
                 {
                     label: 'No'
                 }
@@ -126,6 +157,9 @@ const EditParticipant = () => {
         });
     }
 
+    /**
+     * HTML to be returned by hook
+     */
     return (
         <div>
             <h3 className="mb-3">Edit Participant</h3>

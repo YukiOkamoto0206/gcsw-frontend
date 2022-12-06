@@ -6,15 +6,8 @@ import ReactDatePicker from "react-datepicker";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, tableCellClasses, styled } from "@mui/material";
 import { Link } from "react-router-dom";
 import { useDownloadExcel } from "react-export-table-to-excel";
-import { style } from "@mui/system";
 
 const { useState } = React;
-
-/**
- * 
- * @param {*} props 
- * @returns 
- */
 
 /**
  * custom table cell
@@ -42,6 +35,10 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     }
 }));
 
+/**
+ * Participant hook that displays participant list information in table cells
+ * Contains links to Edit page and Delete action
+ */
 const Participant = props => (
     <StyledTableRow>
         <StyledTableCell component="th" scope="row">{props.participant.participant_id}</StyledTableCell>
@@ -57,13 +54,26 @@ const Participant = props => (
     </StyledTableRow>
 )
 
+/**
+ * React Hook for displaying participant attendance list by date
+ * @returns ParticipantList HTML template
+ */
 const ParticipantList = () => {
+    /**
+     * default state
+     * empty array of participants
+     * current date
+     * empty access token
+     */
     const [state, setState] = useState({
         participants: [],
         date: new Date(),
         token: ''
     });
 
+    /**
+     * Used for exporting table and downloading an Excel file
+     */
     const tableRef = useRef(null);
 
     const { onDownload } = useDownloadExcel({
@@ -72,25 +82,30 @@ const ParticipantList = () => {
         sheet: "Participants"
     });
 
-    // 
+    // method to retreive authenticated user's access token
     const { getAccessTokenSilently } = useAuth0();
 
+    /**
+     * On page load, retrieve attendance of current date
+     */
     useEffect(() => {
         onChangeDate(state.date);
     }, [state.date]);
 
     /**
-     * 
-     * @param {*} date 
+     * Show attendance records of given date
+     * @param {selected date} date 
      */
     const onChangeDate = async (date) => {
         const token = await getAccessTokenSilently();
         
+        // GET request to retrieve participants who have signed in on specified date
         axios.get(`${process.env.REACT_APP_SERVER_URL}/participants/date/${date.toDateString()}`, { 
             headers: {
                 authorization: `Bearer ${token}`,
             }
         })
+        // set state variables using response data, selected date, and access token
         .then(response => {
             setState({
                 participants: response.data, 
@@ -104,13 +119,14 @@ const ParticipantList = () => {
     }
 
     /**
-     * 
-     * @param {*} id 
-     * @param {*} date 
+     * Deletes participant from current attendance list (i.e. signs out the participant for selected date)
+     * @param {participant's MongoDB Object ID} object_id 
+     * @param {selected date} date 
      */
-    const deleteEntry = async (id, date) => {
-        // 
-        axios.put(`${process.env.REACT_APP_SERVER_URL}/participants/delete_entry/${id}/${date.toDateString()}`, {
+    const deleteEntry = async (object_id, date) => {
+        // PUT request to delete the selected participant sign-in entry
+        axios.put(`${process.env.REACT_APP_SERVER_URL}/participants/delete_entry/${object_id}/${date.toDateString()}`, {
+            // NOTE: There is a bug that might be causing this access token to not be send in the header correctly, needs to be fixed
             headers: {
                 authorization: `Bearer ${state.token}`,
             }
@@ -122,15 +138,16 @@ const ParticipantList = () => {
             console.log(error);
         });
 
+        // update table to reflect deleted participant entry
         setState({
-            participants: state.participants.filter(el => el._id !== id && el.date !== date),
+            participants: state.participants.filter(el => el._id !== object_id && el.date !== date),
             date: date
         });
     }
 
     /**
-     * 
-     * @returns 
+     * Display list of participants
+     * @returns rows of Participant hooks
      */
     const participantList = () => {
         return state.participants.map(currentParticipant => {

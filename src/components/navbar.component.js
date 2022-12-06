@@ -2,6 +2,9 @@ import React from 'react';
 import AuthNav from './auth-nav.component';
 import MainNav from './main-nav.component';
 
+/**
+ * Navbar hook containing MainNav and AuthNav hooks
+ */
 const NavBar = () => {
     return (
         <div className="nav-container mb-3">

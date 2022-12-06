@@ -2,11 +2,19 @@ import React, { Component } from "react";
 import axios from "axios";
 import { withAuth0 } from "@auth0/auth0-react";
 import { Row, Col, Form, Button } from 'react-bootstrap';
-import { Snackbar } from "@mui/material";
+import { Alert, Snackbar } from "@mui/material";
 import ReactDatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css"
 
+/**
+ * Component for participant sign-in page
+ * TODO (optional): Refactor code to React Hook
+ */
 class ParticipantSignin extends Component {
+    /**
+     * Constructor binds functions and sets default state values
+     * @param {*} props 
+     */
     constructor(props) {
         super(props); 
 
@@ -19,8 +27,9 @@ class ParticipantSignin extends Component {
         this.onChangeObjective = this.onChangeObjective.bind(this);
         this.onChangeDate = this.onChangeDate.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
+        this.handleClose = this.handleClose.bind(this);
 
-        // default values of form fields
+        // default state values of form fields
         this.state = {
             participant_id: '',
             first_name: '',
@@ -30,7 +39,8 @@ class ParticipantSignin extends Component {
             school: '',
             objective: '',
             date: new Date(), // defaults to current date
-            is_signed_in: false
+            is_signed_in: false,
+            open : false
         }
     }
 
@@ -38,11 +48,8 @@ class ParticipantSignin extends Component {
      * checks if the participant has signed in once before
      */
     onChangeId = async (e) =>{
-        // get request with participant id as the parameter
-        axios.get(`${process.env.REACT_APP_SERVER_URL}/participants/participant_id/${e.target.value}`, {
-            headers: {
-            }
-            })
+        // GET request with participant id as the parameter
+        axios.get(`${process.env.REACT_APP_SERVER_URL}/participants/participant_id/${e.target.value}`)
             .then(response => {
                 // if only one participant is returned, then they are in the database
                 if (response.data[1] === undefined) {
@@ -53,6 +60,7 @@ class ParticipantSignin extends Component {
                         gender: response.data[0].gender,
                         age: response.data[0].age,
                         school: response.data[0].school,
+                        // checks if the participant's latest sign-in matches the current day
                         is_signed_in: this.isToday(response.data[0].dates_with_objectives)
                     })
                 }  
@@ -61,13 +69,14 @@ class ParticipantSignin extends Component {
                 console.log(error);
             });
         
+        // set participant_id state variable
         this.setState({
             participant_id: e.target.value
         });
     }
 
     /**
-     * 
+     * Checks if the participant has already signed in for the day
      * @param {*} dates 
      * @returns 
      */
@@ -140,12 +149,19 @@ class ParticipantSignin extends Component {
         });
     }
 
+    /**
+     * Handles sign in button click
+     * @param {*} e 
+     */
     onSubmit = async (e) => {
         e.preventDefault();
 
+        // if the participant has already signed in, open snackbar message
         if (this.state.is_signed_in) {
-            // snackbar
-
+            this.setState({
+                open: true
+            })
+        // else, sign in the participant
         } else {
             const participant = {
                 participant_id: this.state.participant_id,
@@ -158,10 +174,12 @@ class ParticipantSignin extends Component {
                 date: this.state.date.toDateString()
             }
 
+            // POST request to sign in the participant
             axios.post(`${process.env.REACT_APP_SERVER_URL}/participants/signin`, participant, {
                 headers: {
                 }
                 })
+                // alert message of successful sign-in, refresh page to clear form fields
                 .then(response => {
                     alert("Participant has signed in!");
                     console.log(response.data);
@@ -171,6 +189,20 @@ class ParticipantSignin extends Component {
                     console.log(error);
                 });
         }
+    }
+
+    /**
+     * Handle close of snackbar
+     */
+    handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return; 
+        }
+
+        // close the snackbar
+        this.setState({
+            open: false
+        })
     }
 
     render() {
@@ -272,6 +304,11 @@ class ParticipantSignin extends Component {
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="formButton">
                         <Button variant="primary" type="submit" onClick={this.onSubmit}>Sign In</Button>
+                        <Snackbar open={this.state.open} autoHideDuration={6000} onClose={this.handleClose}>
+                            <Alert onClose={this.handleClose} severity="error" >
+                                You have already signed in today!
+                            </Alert>
+                        </Snackbar>
                     </Form.Group>
                 </Form>
             </div>
