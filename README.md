@@ -2,6 +2,8 @@
 
 This is the frontend component of Greenfield Community Science Workshop Database Project, created as part of the service learning requirement for CST-462S at California State University, Monterey Bay. This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+[GCSW Backend](https://github.com/PedroG1018/gcsw-backend)
+
 ## Routes
 
 ### `/` Sign In Page (Unprotected Route)
@@ -24,13 +26,15 @@ This application is secured using Auth0's authentication services. To access <b>
 
 In the project directory, you can run:
 
-### `npm start`
+### `npm run dev`
 
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
 The page will reload when you make changes.\
 You may also see any lint errors in the console.
+
+<b>Note: When running with local backend, change REACT_APP_SERVER_URL in .env file to http://localhost:6060/api</b>
 
 ### `npm test`
 
