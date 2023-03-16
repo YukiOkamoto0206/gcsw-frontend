@@ -3,7 +3,7 @@ import { useReactToPrint } from 'react-to-print';
  
 import { ComponentToPrint } from './ComponentToPrint';
  
-const Example = () => {
+const  PrintPage= () => {
   const componentRef = useRef();
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
@@ -19,4 +19,4 @@ const Example = () => {
 
 
 
-export default PrintButton;
+export default PrintPage;
