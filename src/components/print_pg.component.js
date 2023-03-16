@@ -1,5 +1,4 @@
 import React from "react";
-import { Button } from "react-bootstrap";
 import ReactToPrint from "react-to-print";
 
 const PrintButton = () => {
@@ -8,13 +7,16 @@ const PrintButton = () => {
       <div>
         {/* button to trigger printing of target component */}
         <ReactToPrint
-          trigger={() => <Button>Print this out!</Button>}
+          trigger={() => <button
+                        className="btn btn-primary btn-block">
+                        Print this out!
+                        </button>}
         />
 
       </div>
     </>
   )
-}
+};
 
 
 export default PrintButton;
