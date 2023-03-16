@@ -1,22 +1,22 @@
 import React from "react";
-import ReactToPrint from "react-to-print";
-
-const PrintButton = () => {
+import { useReactToPrint } from 'react-to-print';
+ 
+import { ComponentToPrint } from './ComponentToPrint';
+ 
+const Example = () => {
+  const componentRef = useRef();
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+  });
+ 
   return (
-    <>
-      <div>
-        {/* button to trigger printing of target component */}
-        <ReactToPrint
-          trigger={() => <button
-                        className="btn btn-primary btn-block">
-                        Print this out!
-                        </button>}
-        />
-
-      </div>
-    </>
-  )
+    <div>
+      <ComponentToPrint ref={componentRef} />
+      <button onClick={handlePrint}>Print this out!</button>
+    </div>
+  );
 };
+
 
 
 export default PrintButton;
