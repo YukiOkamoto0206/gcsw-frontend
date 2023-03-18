@@ -15,10 +15,7 @@ import ReactToPrint from "react-to-print";
 
 const App = () => {
   const { isLoading } = useAuth0();
-  // const componentRef = useRef()
-  // const handlePrint = () => {
-  //   window.print()
-  // }
+
   if (isLoading) {
     return <Loading />;
   }
@@ -26,10 +23,6 @@ const App = () => {
       <div id="app" className="d-flex flex-column h-100">
         
         <NavBar />
-        {/* <ReactToPrint  
-        trigger={() => <button className="btn btn-primary btn-block"> Print </button>}
-        content = {() => componentRef.content}/>
-        <div ref = {componentRef}> */}
        
           <div className="container flex-grow-1">
           
@@ -41,7 +34,6 @@ const App = () => {
               </Route>
             </Routes>
           </div>
-        {/* </div> */}
         <Footer />
       </div>
      
