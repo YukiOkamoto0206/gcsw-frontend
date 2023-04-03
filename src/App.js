@@ -10,6 +10,7 @@ import ProtectedRoute from "./auth/protected-route";
 import ParticipantList from "./components/participant-list.component"
 import EditParticipant from "./components/edit-participant.component";
 import NavBar from "./components/navbar.component";
+import VolunteerList from "./components/volunteer-list.component";
 
 
 const App = () => {
@@ -28,6 +29,7 @@ const App = () => {
             <Route element={<ProtectedRoute />} >
                 <Route path="/participants" element={<ParticipantList />} />
                 <Route path="/edit/:id" element={<EditParticipant />} />
+                <Route path="/volunteers" element={<VolunteerList/>}/>
             </Route>
           </Routes>
         </div>

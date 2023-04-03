@@ -18,6 +18,14 @@ const MainNav = () => (
         >
             Participants
         </NavLink>
+
+        <NavLink
+            to="/volunteers"
+            className="nav-link"
+        >
+            Volunteers
+        </NavLink>
+
     </div>
 );
 
