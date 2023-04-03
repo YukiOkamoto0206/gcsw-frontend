@@ -27,9 +27,9 @@ const App = () => {
           <Routes>
             <Route path="/" exact element={<ParticipantSignin />} />
             <Route element={<ProtectedRoute />} >
-                <Route path="/api/participants" element={<ParticipantList />} />
+                <Route path="/participants" element={<ParticipantList />} />
                 <Route path="/edit/:id" element={<EditParticipant />} />
-                <Route path="/api/volunteers" element={<VolunteerList/>}/>
+                <Route path="/volunteers" element={<VolunteerList/>}/>
             </Route>
           </Routes>
         </div>
