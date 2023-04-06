@@ -6,7 +6,6 @@ import ReactDatePicker from "react-datepicker";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, tableCellClasses, styled } from "@mui/material";
 import { Link } from "react-router-dom";
 import { useDownloadExcel } from "react-export-table-to-excel";
-const { PDFDocument, rgb } = require('pdf-lib');
 
 const { useState } = React;
 
