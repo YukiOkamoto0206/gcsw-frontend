@@ -6,6 +6,7 @@ import ReactDatePicker from "react-datepicker";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, tableCellClasses, styled } from "@mui/material";
 import { Link } from "react-router-dom";
 import { useDownloadExcel } from "react-export-table-to-excel";
+const { PDFDocument, rgb } = require('pdf-lib');
 
 const { useState } = React;
 
@@ -35,6 +36,35 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     }
 }));
 
+const handleLogout = async (volunteer_id, date) => {
+    axios.put(`${process.env.REACT_APP_SERVER_URL}/volunteers/adminLogout`, { volunteer_id: volunteer_id, date: date }, {
+        headers: {
+        }
+    })
+        // alert message of successful sign-in, refresh page to clear form fields
+        .then(response => {
+            alert("Volunteer has logged out!");
+            console.log(response.data);
+            window.location = '/'
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+}
+
+const printUserReport = async (volunteer_id) => {
+    axios.get(`${process.env.REACT_APP_SERVER_URL}/volunteers/volunteer_id/${volunteer_id}`, {
+        headers: {
+        }
+    })
+        // set state variables using response data, selected date, and access token
+        .then(response => {
+           console.log(response.data[0].first_name, response.data[0].last_name)
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+}
 
 /**
  * Volunteer hook that displays volunteer list information in table cells
@@ -47,9 +77,12 @@ const Volunteer = props => (
         <StyledTableCell align="right">{props.volunteer.last_name}</StyledTableCell>
         <StyledTableCell align="right">{props.volunteer.total_hours}</StyledTableCell>
         <StyledTableCell align="right">{props.volunteer.is_signed_in ? "Yes" : "No"}</StyledTableCell>
+        <StyledTableCell align="right">{props.volunteer.is_signed_in ? <Button variant="danger" onClick={() => handleLogout(props.volunteer.volunteer_id, new Date().toDateString())}>Log Out</Button> : "Not Logged In"}</StyledTableCell>
         <StyledTableCell align="right">
             <Link to={"/edit/" + props.volunteer._id}>Edit</Link> | <a href="#" onClick={() => { props.deleteEntry(props.volunteer._id, props.date) }}>Delete</a>
         </StyledTableCell>
+        <StyledTableCell align="right"> <a href="#" onClick={() => printUserReport(props.volunteer.volunteer_id)}> Print Report</a> </StyledTableCell>
+
     </StyledTableRow>
 )
 
@@ -214,11 +247,11 @@ const VolunteerList = () => {
                     />
                 </Form.Group>
                 <Form.Group className="mb-3">
-                    <Form.Label>Search by Volunteer:</Form.Label><br/>
-                    <input type="text" value={searchTerm} onChange={userSerach}/>
+                    <Form.Label>Search by Volunteer:</Form.Label><br />
+                    <input type="text" value={searchTerm} onChange={userSerach} />
                 </Form.Group>
-                </Form>
-                <Form>
+            </Form>
+            <Form>
                 <Form.Group className="mb-3">
                     <Button variant="success" onClick={onDownload}>Export Table to XLS</Button>&nbsp;
                     <Button variant="success" onClick={getVolunteers}>View All Members</Button>
@@ -233,7 +266,9 @@ const VolunteerList = () => {
                             <StyledTableCell align="right"><b>Last Name / Apellido</b></StyledTableCell>
                             <StyledTableCell align="right"><b>Total Hours</b></StyledTableCell>
                             <StyledTableCell align="right"><b>Logged in?</b></StyledTableCell>
+                            <StyledTableCell align="right"><b>Force Log Out?</b></StyledTableCell>
                             <StyledTableCell align="right"><b>Edit/Delete</b></StyledTableCell>
+                            <StyledTableCell align="right"><b>Print Report?</b></StyledTableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>

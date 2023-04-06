@@ -14,7 +14,7 @@ const LogOutModal = ({ setOpenModal, volunteer_id, date}) => {
         })
             // alert message of successful sign-in, refresh page to clear form fields
             .then(response => {
-                alert("Participant has logged out!");
+                alert("Volunteer has logged out!");
                 console.log(response.data);
                 window.location = '/'
             })

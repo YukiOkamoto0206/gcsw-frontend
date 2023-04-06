@@ -373,6 +373,21 @@ class ParticipantSignin extends Component {
                             </Col>
                         </Row>
                     </Form.Group>
+                    
+                    {this.state.participant_or_volunteer === "Volunteer" && (
+                    <Form.Group className="mb-3" style={{width:"49%"}}>
+                        <Row>
+                            <Col>
+                                <Form.Label>Phone Number:</Form.Label>
+                                <Form.Control 
+                                type="text"
+                                required
+                                pattern="[0-9]*" 
+                                value={this.state.number}
+                                onChange={this.onChangeNumber}/>
+                            </Col>
+                        </Row>
+                    </Form.Group> )}
 
                     {this.state.participant_or_volunteer === 'Participant' && (
                         <Form>
