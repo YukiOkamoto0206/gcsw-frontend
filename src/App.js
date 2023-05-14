@@ -11,7 +11,9 @@ import ProtectedRoute from "./auth/protected-route";
 import ParticipantList from "./components/participant-list.component"
 import EditParticipant from "./components/edit-participant.component";
 import NavBar from "./components/navbar.component";
-import ReactToPrint from "react-to-print";
+import Print from "./components/print-button.component";
+
+
 
 const App = () => {
   const { isLoading } = useAuth0();
@@ -20,12 +22,16 @@ const App = () => {
     return <Loading />;
   }
   return (
-      <div id="app" className="d-flex flex-column h-100">
-        
+      <div id="app" className="d-flex flex-column h-100">    
+       <div  id='printablediv' >
+    
         <NavBar />
-       
-          <div className="container flex-grow-1">
+        {/* <MulitselectDrop></MulitselectDrop> */}
+
           
+          <div className="container flex-grow-1">
+            
+              
             <Routes>
               <Route path="/" exact element={<ParticipantSignin />} />
               <Route element={<ProtectedRoute />} >
@@ -33,10 +39,14 @@ const App = () => {
                   <Route path="/edit/:id" element={<EditParticipant />} />
               </Route>
             </Routes>
+            <button type="button" onClick={Print} > Print page</button>
           </div>
-        <Footer />
+
+
+          
+         <Footer />
+        </div>
       </div>
-     
   );
 }
 

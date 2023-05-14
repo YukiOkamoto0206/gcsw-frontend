@@ -90,3 +90,20 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+
+### Notes for future devolopment
+- continue to work on add a electronic signature
+- figure out how to make it work without crashing the website
+- formatte it make it work with website
+- use for ref:[https://www.commoninja.com/blog/how-to-build-a-digital-signature-pad-in-react]
+
+### Notes For MultiselectDrop
+- used for ref: [https://www.npmjs.com/package/multiselect-react-dropdown]
+- doesnt show up on App.js when running
+- needs to fix MultiselectDrop.js 
+
+
+## bug for print button
+- make it  where allow multiple prints without refreshing page
+ 
