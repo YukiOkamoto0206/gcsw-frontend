@@ -20,6 +20,7 @@ class ParticipantSignin extends Component {
         super(props);
 
         this.onChangeParticipantId = this.onChangeParticipantId.bind(this);
+        this.onChangePhoneNumber = this.onChangePhoneNumber.bind(this);
         this.onChangeVolunteerId = this.onChangeVolunteerId.bind(this);
         this.onChangeFirstName = this.onChangeFirstName.bind(this);
         this.onChangeLastName = this.onChangeLastName.bind(this);
@@ -47,7 +48,9 @@ class ParticipantSignin extends Component {
             date: new Date(), // defaults to current date
             is_signed_in: false,
             open: false,
-            modalOpen: false
+            modalOpen: false,
+            phone_number: '',
+            volunteer_title: ''
         }
 
     }
@@ -64,9 +67,11 @@ class ParticipantSignin extends Component {
                         last_name: response.data[0].last_name,
                         gender: response.data[0].gender,
                         age: response.data[0].age,
+                        phone_number: response.data[0].phone_number,
                         // school: response.data[0].school,
                         // checks if the participant's latest sign-in matches the current day
-                        is_signed_in: response.data[0].is_signed_in
+                        is_signed_in: response.data[0].is_signed_in,
+                        volunteer_title: response.data[0].volunteer_title
                     })
                 }
                 console.log(this.state.is_signed_in, response.data)
@@ -169,6 +174,12 @@ class ParticipantSignin extends Component {
         });
     }
 
+    onChangePhoneNumber = (e) => {
+        this.setState({
+            phone_number: e.target.value
+        })
+    }
+
     /**
      * update school
      */
@@ -217,6 +228,7 @@ class ParticipantSignin extends Component {
                 gender: this.state.gender,
                 age: this.state.age,
                 date: this.state.date.toDateString(),
+                phone_number: this.state.phone_number,
                 is_signed_in : this.state.is_signed_in
             }
 
@@ -228,7 +240,7 @@ class ParticipantSignin extends Component {
             })
                 // alert message of successful sign-in, refresh page to clear form fields
                 .then(response => {
-                    alert("volunteer has signed in!");
+                    alert( volunteer.first_name + " has signed in! Don't forget to sign out!");
                     console.log(response.data);
                     window.location = '/';
                 })
@@ -272,7 +284,7 @@ class ParticipantSignin extends Component {
             })
                 // alert message of successful sign-in, refresh page to clear form fields
                 .then(response => {
-                    alert("Participant has signed in!");
+                    alert( participant.first_name + " has signed in! Don't forget to sign out!");
                     console.log(response.data);
                     window.location = '/';
                 })
@@ -299,7 +311,9 @@ class ParticipantSignin extends Component {
     render() {
         return (
             <div>
-                <h3 className="mb-3">Sign In/Log Out</h3>
+                {!this.state.is_signed_in && (<h3 className="mb-3">Sign In</h3>)}
+                {this.state.is_signed_in && (<h3 className="mb-3">Log Out</h3>)}
+                {/* <h3 className="mb-3">Sign In/Log Out</h3> */}
                 <Form>
                     <Row>
                         <Col>
@@ -375,7 +389,7 @@ class ParticipantSignin extends Component {
                     </Form.Group>
                     
                     {this.state.participant_or_volunteer === "Volunteer" && (
-                    <Form.Group className="mb-3" style={{width:"49%"}}>
+                    <Form.Group className="mb-3" >
                         <Row>
                             <Col>
                                 <Form.Label>Phone Number:</Form.Label>
@@ -383,8 +397,17 @@ class ParticipantSignin extends Component {
                                 type="text"
                                 required
                                 pattern="[0-9]*" 
-                                value={this.state.number}
-                                onChange={this.onChangeNumber}/>
+                                value={this.state.phone_number}
+                                onChange={this.onChangePhoneNumber}/>
+                            </Col>
+                            <Col>
+                                <Form.Label>Volunteer Title:</Form.Label>
+                                <Form.Control 
+                                type="text"
+                                required
+                                value={this.state.volunteer_title}
+                                disabled
+                                />
                             </Col>
                         </Row>
                     </Form.Group> )}
