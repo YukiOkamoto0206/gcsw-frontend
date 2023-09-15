@@ -5,7 +5,7 @@ import { Form, Button } from "react-bootstrap";
 import ReactDatePicker from "react-datepicker";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, tableCellClasses, styled } from "@mui/material";
 import { Link } from "react-router-dom";
-import { useDownloadExcel } from "react-export-table-to-excel";
+import { downloadExcel, useDownloadExcel } from "react-export-table-to-excel";
 
 const { useState } = React;
 
@@ -19,6 +19,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     },
     [`&.${tableCellClasses.body}`]: {
         fontSize: 16,
+        whiteSpace: 'nowrap'
     }
 }));
 
@@ -51,19 +52,8 @@ const handleLogout = async (volunteer_id, date) => {
         });
 }
 
-const printUserReport = async (volunteer_id) => {
-    axios.get(`${process.env.REACT_APP_SERVER_URL}/volunteers/volunteer_id/${volunteer_id}`, {
-        headers: {
-        }
-    })
-        // set state variables using response data, selected date, and access token
-        .then(response => {
-           console.log(response.data[0].first_name, response.data[0].last_name)
-        })
-        .catch((error) => {
-            console.log(error);
-        });
-}
+
+
 
 /**
  * Volunteer hook that displays volunteer list information in table cells
@@ -72,16 +62,13 @@ const printUserReport = async (volunteer_id) => {
 const Volunteer = props => (
     <StyledTableRow>
         <StyledTableCell component="th" scope="row">{props.volunteer.volunteer_id}</StyledTableCell>
-        <StyledTableCell align="right">{props.volunteer.first_name}</StyledTableCell>
-        <StyledTableCell align="right">{props.volunteer.last_name}</StyledTableCell>
+        <StyledTableCell align="right">{props.volunteer.first_name + ' ' + props.volunteer.last_name}</StyledTableCell>
         <StyledTableCell align="right">{props.volunteer.total_hours}</StyledTableCell>
         <StyledTableCell align="right">{props.volunteer.is_signed_in ? "Yes" : "No"}</StyledTableCell>
         <StyledTableCell align="right">{props.volunteer.is_signed_in ? <Button variant="danger" onClick={() => handleLogout(props.volunteer.volunteer_id, new Date().toDateString())}>Log Out</Button> : "Not Logged In"}</StyledTableCell>
-        <StyledTableCell align="right">
-            <Link to={"/edit/" + props.volunteer._id}>Edit</Link> | <a href="#" onClick={() => { props.deleteEntry(props.volunteer._id, props.date) }}>Delete</a>
-        </StyledTableCell>
-        <StyledTableCell align="right"> <a href="#" onClick={() => printUserReport(props.volunteer.volunteer_id)}> Print Report</a> </StyledTableCell>
-
+        <StyledTableCell align="right"> {props.volunteer.phone_number ? `(${props.volunteer.phone_number.substring(0, 3)})-${props.volunteer.phone_number.substring(3, 6)}-${props.volunteer.phone_number.substring(6, 10)}` : ''} </StyledTableCell>
+        <StyledTableCell align="right"> {props.volunteer.volunteer_title} </StyledTableCell>
+        <StyledTableCell align="right"> <Button variant="success" onClick={() => props.onDownload(props.volunteer.first_name,props.volunteer.last_name,props.volunteer.total_hours,props.volunteer.phone_number, props.volunteer.hours_on_date)}>Print report</Button></StyledTableCell>
     </StyledTableRow>
 )
 
@@ -103,6 +90,7 @@ const VolunteerList = () => {
     });
 
     const [searchTerm, setSearchTerm] = useState('');
+    const [selectedTitle, setSelectedTitle] = useState('');
 
     const getVolunteers = async () => {
         const token = await getAccessTokenSilently();
@@ -148,17 +136,57 @@ const VolunteerList = () => {
             });
     }
 
+    const titleSearch = async (e) => {
+        setSelectedTitle(e.target.value)
+        console.log(e.target.value)
+        const token = await getAccessTokenSilently();
+        axios.get(`${process.env.REACT_APP_SERVER_URL}/volunteers/searchTitle?q=${e.target.value}`, {
+            headers: {
+                authorization: `Bearer ${token}`,
+            }
+        })
+        .then(response => {
+            const data = response.data;
+            console.log(data)
+            setState(prevState => ({...prevState, volunteers:data}));
+        })
+        .catch((error) => {
+            console.log(error);
+        })
+    }
+
 
     /**
      * Used for exporting table and downloading an Excel file
      */
     const tableRef = useRef(null);
 
-    const { onDownload } = useDownloadExcel({
-        currentTableRef: tableRef.current,
-        filename: `Volunteers (${state.date})`,
-        sheet: "Volunteers"
-    });
+    const onDownload  = (first_name, last_name, hours, number, hours_on_date) => {
+
+        const header = ['Name', 'hours', 'number'];
+
+       const body = [];
+
+  const volunteerNameRow = [first_name + ' ' + last_name, '', ''];
+  body.push(volunteerNameRow);
+
+  if (hours_on_date instanceof Map) {
+    for (const [key, value] of hours_on_date.entries()) {
+      const row = [key, value];
+      body.push(row);
+    }
+}
+        downloadExcel({
+            fileName: 'Report for ' + first_name + ' ' + last_name,
+            sheet: "Volunteers",
+            tablePayload: {
+                header,
+                body:body
+            }
+            
+        });
+
+    }
 
     // method to retreive authenticated user's access token
     const { getAccessTokenSilently } = useAuth0();
@@ -197,39 +225,12 @@ const VolunteerList = () => {
     }
 
     /**
-     * Deletes volunteer from current attendance list (i.e. signs out the volunteer for selected date)
-     * @param {volunteer's MongoDB Object ID} object_id 
-     * @param {selected date} date 
-     */
-    const deleteEntry = async (object_id, date) => {
-        // PUT request to delete the selected volunteer sign-in entry
-        axios.put(`${process.env.REACT_APP_SERVER_URL}/volunteers/delete_entry/${object_id}/${date.toDateString()}`, {
-            // NOTE: There is a bug that might be causing this access token to not be send in the header correctly, needs to be fixed
-            headers: {
-                authorization: `Bearer ${state.token}`,
-            }
-        })
-            .then(() => {
-                alert("Entry successfully deleted");
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-
-        // update table to reflect deleted volunteer entry
-        setState({
-            volunteers: state.volunteers.filter(el => el._id !== object_id && el.date !== date),
-            date: date
-        });
-    }
-
-    /**
      * Display list of volunteers
      * @returns rows of Volunteer hooks
      */
     const volunteerList = () => {
         return state.volunteers.map(currentVolunteer => {
-            return <Volunteer date={state.date} volunteer={currentVolunteer} deleteEntry={deleteEntry} key={currentVolunteer.volunteer_id} />;
+            return <Volunteer date={state.date} volunteer={currentVolunteer} onDownload={onDownload} key={currentVolunteer.volunteer_id} />;
         })
     }
 
@@ -249,10 +250,28 @@ const VolunteerList = () => {
                     <Form.Label>Search by Volunteer:</Form.Label><br />
                     <input type="text" value={searchTerm} onChange={userSerach} />
                 </Form.Group>
+
+                <Form.Group className="mb-3">
+                    <Form.Label style={{marginLeft:'80px'}}>Filter by Title:</Form.Label><br />
+                    <select id="title" value={selectedTitle} onChange={titleSearch} style={{marginLeft:'80px', height:'30px', width:'185px'}}>
+                        <option value="">All Titles</option>
+                        <option value="Intern Scientist">Intern Scientist</option>
+                        <option value="Lab Explorer">Lab Explorer</option>
+                        <option value="Science Sidekick">Science Sidekick</option>
+                        <option value="Research Rockstar">Research Rockstar</option>
+                        <option value="Experiment Hunter">Experiment Hunter</option>
+                        <option value="Lab Ninja">Lab Ninja</option>
+                        <option value="Dr. Cerebro">Dr. Cerebro</option>
+                        <option value="Jedi of Science">Jedi of Science</option>
+                        <option value="Master of Science">Master of Science</option>
+                        <option value="Science Sensei">Science Sensei</option>
+                        <option value="Mad Scientist">Mad Scientist</option>
+                    </select>
+                </Form.Group>
             </Form>
             <Form>
                 <Form.Group className="mb-3">
-                    <Button variant="success" onClick={onDownload}>Export Table to XLS</Button>&nbsp;
+                    <Button variant="success" >Export Table to XLS</Button>&nbsp;
                     <Button variant="success" onClick={getVolunteers}>View All Members</Button>
                 </Form.Group>
             </Form>
@@ -261,12 +280,12 @@ const VolunteerList = () => {
                     <TableHead >
                         <TableRow>
                             <StyledTableCell><b>User ID / ID de Usuario</b></StyledTableCell>
-                            <StyledTableCell align="right"><b>First Name / Nombre de Pila</b></StyledTableCell>
-                            <StyledTableCell align="right"><b>Last Name / Apellido</b></StyledTableCell>
+                            <StyledTableCell align="right"><b>Name / Nombre</b></StyledTableCell>
                             <StyledTableCell align="right"><b>Total Hours</b></StyledTableCell>
                             <StyledTableCell align="right"><b>Logged in?</b></StyledTableCell>
                             <StyledTableCell align="right"><b>Force Log Out?</b></StyledTableCell>
-                            <StyledTableCell align="right"><b>Edit/Delete</b></StyledTableCell>
+                            <StyledTableCell align="right"><b>Phone Number</b></StyledTableCell>
+                            <StyledTableCell align="right"><b>Volunteer Title</b></StyledTableCell>
                             <StyledTableCell align="right"><b>Print Report?</b></StyledTableCell>
                         </TableRow>
                     </TableHead>
