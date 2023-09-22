@@ -36,6 +36,7 @@ const App = () => {
               <Route path="/" exact element={<ParticipantSignin />} />
               <Route element={<ProtectedRoute />} >
                   <Route path="/participants" element={<ParticipantList />} />
+                  <Route path="/volunteers" element={<VolunteerList />} />
                   <Route path="/edit/:id" element={<EditParticipant />} />
               </Route>
             </Routes>
