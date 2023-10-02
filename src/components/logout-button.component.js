@@ -15,7 +15,7 @@ const LogoutButton = () => {
                 })
             }
             >
-                Log Out
+                Staff Log Out
             </button>
     );
 };

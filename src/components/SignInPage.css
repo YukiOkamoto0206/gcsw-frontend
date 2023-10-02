@@ -1,0 +1,91 @@
+/* Reset margin and padding for all elements */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Full height for body and root element */
+body, html {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: #589091 !important;
+    overflow-y: hidden;  /* Prevent vertical scrolling */
+}
+
+.page-container {
+    height: 100vh;  /* Takes the full viewport height */
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.nav-container {
+    flex: 0;
+}
+
+/* Flex container to center content vertically */
+.sign-in-container {
+    flex: 1;  /* Takes up remaining space */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Header styling */
+.sign-in-header {
+    font-size: 2rem;
+    margin-bottom: 2rem;  /* Space below the header */
+}
+
+/* Button container with spacing */
+.button-container {
+    display: flex;
+    flex-direction: row;  /* Change this to row */
+    justify-content: center;  /* Center buttons horizontally */
+    align-items: center;  /* Center buttons vertically */
+    gap: 1rem;  /* Gap between buttons */
+    width: 100%;  /* Full width to accommodate buttons */
+}
+
+/* Button styling */
+.sign-in-button {
+    font-size: 1.5rem;
+    padding: 16px 32px;
+    border: none;
+    color: white;
+    cursor: pointer;
+    width: 100%;  /* Adjust this */
+    text-align: center;
+   
+}
+
+/* Volunteer button */
+.volunteer-button {
+    background-color: #4CAF50;
+}
+
+/* Hover effect */
+.volunteer-button:hover {
+    background-color: #45a049;
+}
+
+/* Participant button */
+.participant-button {
+    background-color: #008CBA;
+}
+
+/* Hover effect */
+.participant-button:hover {
+    background-color: #007B9E;
+}
+
+/* Media query for smaller screens */
+@media only screen and (max-width: 768px) {
+    .sign-in-button {
+        width: 80%;
+    }
+}

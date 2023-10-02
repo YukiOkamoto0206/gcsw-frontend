@@ -11,7 +11,7 @@ const LoginButton = () => {
             className="btn btn-primary btn-block"
             onClick={() => loginWithRedirect()}
             >
-                Log In
+                Staff Log In
             </button>
     )
 }

@@ -21,7 +21,7 @@
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: white;
+  /* color: white; */
 }
 
 .App-link {
@@ -35,4 +35,29 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.home-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh; /* Fills the viewport height */
+}
+
+.button-container {
+  margin: 10px; /* Add space between buttons */
+}
+
+.home-button {
+  font-size: 1.2rem; /* Increase font size */
+  padding: 12px 24px; /* Top/bottom and left/right padding */
+  border: none;
+  background-color: #007bff; /* Example background color */
+  color: white; /* Text color */
+  cursor: pointer;
+}
+
+.home-button:hover {
+  background-color: #0056b3; /* Darker shade for hover */
 }

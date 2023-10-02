@@ -1,0 +1,25 @@
+/* === NavBar Styles === */
+.nav-container {
+    width: 100%;
+    background-color: #589091;
+}
+
+.custom-navbar {
+    background-color: #589091;
+}
+
+.custom-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.custom-navbar-brand {
+    margin-left: 10px; /* Adjust this value to move the image more to the left */
+}
+
+.custom-auth-nav {
+    margin-right: 10px; /* Adjust this value to move the login button more to the right */
+}
+/* === End NavBar Styles === */
+
