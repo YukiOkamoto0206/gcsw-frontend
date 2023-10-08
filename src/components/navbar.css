@@ -5,21 +5,15 @@
 }
 
 .custom-navbar {
-    background-color: #589091;
+    background-color: rgba(211, 211, 210, 0.5); /* 50% opacity */
 }
 
 .custom-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin: 0;
 }
 
-.custom-navbar-brand {
-    margin-left: 10px; /* Adjust this value to move the image more to the left */
-}
-
-.custom-auth-nav {
-    margin-right: 10px; /* Adjust this value to move the login button more to the right */
-}
 /* === End NavBar Styles === */
 

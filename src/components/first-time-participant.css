@@ -1,0 +1,75 @@
+/* General Container */
+.nav-container {
+    margin-bottom: 20px;
+}
+
+/* Form styling */
+.form-control {
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+/* Button styling */
+button[type="submit"] {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+}
+
+button[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+/* Snackbar alert */
+.Alert {
+    font-size: 16px;
+    color: red;
+}
+
+/* DatePicker */
+#date-picker {
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+/* Textarea */
+textarea.form-control {
+    resize: none;
+    height: 100px;
+}
+
+/* Headings */
+h3.mb-3 {
+    margin-bottom: 20px;
+}
+
+/* Make the layout responsive */
+@media only screen and (max-width: 768px) {
+    /* Responsive form-group */
+    .form-group {
+        margin-bottom: 15px;
+    }
+    /* Responsive buttons */
+    button[type="submit"] {
+        padding: 8px 16px;
+    }
+}
+
+/* Modified Container */
+.container {
+    max-width: calc(100% - 2in);
+    margin: 0 auto;
+}
+
+/* Ensure body and html take up full viewport height */
+html, body {
+    overflow-y: auto;
+    margin: 0;
+    padding: 0;
+}

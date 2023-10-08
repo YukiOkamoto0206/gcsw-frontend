@@ -12,11 +12,11 @@ const ParticipantsPage = () => {
       <div className="participants-container">
         <h1 className="participants-header">Participants</h1>
         <div className="button-container">
-          <Link to="/option1">
-            <button className="participants-button option1-button">Option 1</button>
+          <Link to="/first-time-participant">
+            <button className="participants-button option1-button">First Time Participant</button>
           </Link>
-          <Link to="/option2">
-            <button className="participants-button option2-button">Option 2</button>
+          <Link to="/returning-participant">
+            <button className="participants-button option2-button">Returning</button>
           </Link>
         </div>
       </div>
