@@ -24,7 +24,6 @@ class ParticipantSignin extends Component {
      constructor(props) {
         super(props);
     
-        this.onChangeParticipantId = this.onChangeParticipantId.bind(this);
         this.onChangeFirstName = this.onChangeFirstName.bind(this);
         this.onChangeLastName = this.onChangeLastName.bind(this);
         this.onChangeGender = this.onChangeGender.bind(this);
@@ -36,7 +35,6 @@ class ParticipantSignin extends Component {
         this.handleClose = this.handleClose.bind(this);
     
         this.state = {
-            participant_id: '',
             first_name: '',
             last_name: '',
             gender: '',
@@ -51,37 +49,6 @@ class ParticipantSignin extends Component {
     
 
 
-
-    /**
-     * checks if the participant has signed in once before
-     */
-    onChangeParticipantId = async (e) => {
-        // GET request with participant id as the parameter
-        axios.get(`${process.env.REACT_APP_SERVER_URL}/participants/participant_id/${e.target.value}`)
-            .then(response => {
-                // if only one participant is returned, then they are in the database
-                if (response.data[1] === undefined) {
-                    // update field forms with participant credentials
-                    this.setState({
-                        first_name: response.data[0].first_name,
-                        last_name: response.data[0].last_name,
-                        gender: response.data[0].gender,
-                        age: response.data[0].age,
-                        school: response.data[0].school,
-                        // checks if the participant's latest sign-in matches the current day
-                        is_signed_in: this.isToday(response.data[0].dates_with_objectives)
-                    })
-                }
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-
-        // set participant_id state variable
-        this.setState({
-            participant_id: e.target.value
-        });
-    }
 
     /**
      * Checks if the participant has already signed in for the day
@@ -239,7 +206,7 @@ class ParticipantSignin extends Component {
                 {this.state.is_signed_in && (<h3 className="mb-3">Log Out</h3>)}
                 {/* <h3 className="mb-3">Sign In/Log Out</h3> */}
                 <Form>
-                    <Row>
+                    {/* <Row>
                         <Col>
                             <Form.Group className="mb-3" controlId="formId">
                                 <Form.Label>User ID / ID de Usuario:</Form.Label>
@@ -251,7 +218,7 @@ class ParticipantSignin extends Component {
                             </Form.Group>
                         </Col>
                         
-                    </Row>
+                    </Row> */}
 
                     <Form.Group className="mb-3" controlId="formName">
                         <Row>
