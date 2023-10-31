@@ -1,18 +1,18 @@
 import React, { useEffect, useRef } from 'react';
 import NavBar from './navbar.component';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom'; // Import useNavigate
 import './participant-homepage.css';
 
 const ParticipantHomePage = ({ 
   badges = [ 
-    {name: "Default Badge", icon: "https://via.placeholder.com/150"},
+    {name: "Badge 1", icon: "https://via.placeholder.com/150"},
     {name: "Badge 2", icon: "https://via.placeholder.com/150"},
     {name: "Badge 3", icon: "https://via.placeholder.com/150"},
-    {name: "Badge 4", icon: "https://via.placeholder.com/150"},
-    {name: "Badge 5", icon: "https://via.placeholder.com/150"}
-  ]  // Using placeholder as example badge
+    {name: "Badge 4", icon: "https://via.placeholder.com/150"}
+  ]
 }) => {
   const location = useLocation();
+  const navigate = useNavigate(); // Get a reference to the navigate function
   const userID = location.state?.userID || "Default Student";
   const badgesContainerRef = useRef(null);
 
@@ -31,8 +31,6 @@ const ParticipantHomePage = ({
     return () => window.removeEventListener('resize', adjustSquareSize);
   }, []);
 
-  console.log("Rendering ParticipantHomePage");
-
   return (
     <div className="page-container">
       <div className="nav-container">
@@ -43,9 +41,9 @@ const ParticipantHomePage = ({
         <br></br>
         <h3>Welcome {userID}</h3>
         <div className="actions-container">
-          <button className="action-btn">Field Trips</button>
-          <button className="action-btn">Tools Mastered</button>
-          <button className="action-btn">Projects Completed</button>
+          <button className="action-btn" onClick={() => navigate("/field-trips")}>Field Trips</button>
+          <button className="action-btn" onClick={() => navigate("/tools-mastered")}>Tools Mastered</button>
+          <button className="action-btn" onClick={() => navigate("/projects-completed")}>Projects Completed</button>
         </div>
         <div className="badges-container" ref={badgesContainerRef}>
           {badges.map(badge => (

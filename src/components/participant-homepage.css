@@ -1,21 +1,21 @@
 .page-container {
     display: flex;
     flex-direction: column;
-    min-height: 100vh; /* Ensure the container takes full viewport height */
-    position: relative; /* Add this line */
+    min-height: 100vh;
+    position: relative;
 }
 
 .nav-container {
-    flex: 0; /* Do not grow or shrink; keep space only for its content */
-    /* Assuming your navbar has a specific height, you can use it to push the badges-container down. 
-    If the navbar doesn't have a fixed height, you can adjust the 'top' value of the badges-container accordingly. */
+    flex: 0;
+    position: relative;  /* Add relative positioning to ensure z-index takes effect */
 }
 
 .participant-page-container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    flex-grow: 1; /* Allow this container to grow and take available space */
+    flex-grow: 1;
+    justify-content: center; /* Centers the content vertically */
 }
 
 .actions-container {
@@ -45,41 +45,36 @@
 
 .badges-container {
     position: absolute;
-    top: 0; /* Adjust this value if your navbar has a height other than 0 */
+    bottom: 0;
+    top: 9rem;
     right: 3rem;
-    width: 160px;
+    width: 14%; 
     display: flex;
     flex-direction: column;
-    gap: 10%; /* Increase gap for vertical spacing between badges */
     align-items: center;
-    height: 70%; /* Utilize 70% of the screen height for badges */
-    justify-content: space-between; /* Evenly space out badges */
+    overflow: hidden;
+    /* border: 3px solid #FF69B4; */
+  
 }
 
 .badge-item {
-    position: relative;
-    width: 140px; /* This defines the size */
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.5rem;
+    width: 100%;
 }
 
 .badge-item::before {
-    content: "";
+    /* content: ""; */
     display: block;
-    padding-top: 100%; /* Maintain square aspect ratio */
+    padding-top: 80%;
 }
 
 .badge-item img {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
     width: 100%;
-    height: 100%;
-    border-radius: 10px;
+    height: auto;
+    max-width: 100px;
+    max-height: 100px;
 }
 
 .badge-item label { 

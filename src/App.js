@@ -10,6 +10,9 @@ import ParticipantsFirstPage from './components/participants-first-page.componen
 import FirstTimeParticipant from './components/first-time-participant.component'; 
 import ReturningParticipant from './components/returning-participant.component'; 
 import ParticipantHomePage from './components/participant-homepage.component'; 
+import FieldTrips from './components/participant-field-trips.component';
+import ToolsMastered from './components/participant-tools-mastered.component';
+import ProjectsCompleted from './components/participant-projects-completed.component';
 import StaffPage from './components/staff-page.component';
 import ProtectedRoute from './auth/protected-route';
 import Loading from './components/loading.component';
@@ -31,6 +34,9 @@ const App = () => {
         <Route path="/first-time-participant" element={<FirstTimeParticipant />} /> 
         <Route path="/returning-participant" element={<ReturningParticipant />} />
         <Route path="/participant-homepage" element={<ParticipantHomePage />} /> 
+        <Route path="/field-trips" element={<FieldTrips />} />
+        <Route path="/tools-mastered" element={<ToolsMastered />} />
+        <Route path="/projects-completed" element={<ProjectsCompleted />} />
         <Route path="/staff" element={<ProtectedRoute><StaffPage /></ProtectedRoute>} />
       </Routes>
     </div>
