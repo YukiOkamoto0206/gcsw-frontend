@@ -12,7 +12,7 @@ const SignInPage = () => {
       <div className="sign-in-container">
         <h1 className="sign-in-header">Welcome to the Greenfield Community Workshop</h1>
         <div className="button-container">
-          <Link to="/volunteer-info">
+          <Link to="/volunteers-first-page">
             <button className="sign-in-button volunteer-button">Volunteer</button>
           </Link>
           <Link to="/participants-first-page">
