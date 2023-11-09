@@ -190,7 +190,7 @@ class VolunteerSignup extends Component {
                                     <Form.Control
                                         type="text"
                                         required
-                                        value=""
+                                        value={this.state.first_name}
                                         onChange={this.onChangeFirstName} />
                                 </Col>
                                 <Col>
@@ -198,7 +198,7 @@ class VolunteerSignup extends Component {
                                     <Form.Control
                                         type="text"
                                         required
-                                        value=""
+                                        value={this.state.last_name}
                                         onChange={this.onChangeLastName} />
                                 </Col>
                             </Row>
@@ -225,7 +225,7 @@ class VolunteerSignup extends Component {
                                         required
                                         min="1"
                                         max="99"
-                                        value="0"
+                                        value={this.state.age}
                                         onChange={this.onChangeAge} />
                                 </Col>
                             </Row>
