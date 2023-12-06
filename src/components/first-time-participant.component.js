@@ -211,10 +211,11 @@ class ParticipantSignin extends Component {
                     <Row>
                         <Col>
                             <Form.Group className="mb-3" controlId="formId">
-                                <Form.Label>User ID / ID de Usuario:</Form.Label>
+                                <Form.Label>Participant ID / ID de Participante:</Form.Label>
                                 <Form.Control
                                     type="text"
                                     required
+                                    placeholder='firstname+lastname+dateofbirth'
                                     defaultValue={this.state.participant_id}
                                     onBlur={this.onChangeParticipantId} />
                             </Form.Group>
