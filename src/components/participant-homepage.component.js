@@ -13,6 +13,7 @@ const ParticipantHomePage = ({
 }) => {
   const location = useLocation(); // Use useLocation hook
   const participantId = new URLSearchParams(location.search).get('participant_id'); // Retrieve participant_id from query parameters
+  const participantName = new URLSearchParams(location.search).get('participant_name'); //trying to get first name of participant
   const navigate = useNavigate(); // Get a reference to the navigate function
   const badgesContainerRef = useRef(null);
 
@@ -39,7 +40,7 @@ const ParticipantHomePage = ({
       <div className="participant-page-container">
         <h1>Participant Page</h1>
         <br></br>
-        <h3>Welcome {participantId}</h3>
+        <h3>Welcome {participantName}</h3>
         <div className="actions-container">
           <button className="action-btn" onClick={() => navigate("/field-trips")}>Field Trips</button>
           <button className="action-btn" onClick={() => navigate("/tools-mastered")}>Tools Mastered</button>

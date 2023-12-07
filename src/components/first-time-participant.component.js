@@ -171,7 +171,7 @@ class ParticipantSignin extends Component {
                 .then(response => {
                     alert( participant.first_name + " has signed in! Don't forget to sign out!");
                     console.log(response.data);
-                    window.location = `/participant-homepage?participant_id=${this.state.participant_id}`;
+                    window.location = `/participant-homepage?participant_id=${this.state.participant_id}&participant_name=${this.state.first_name}`;
 
 
                 })
