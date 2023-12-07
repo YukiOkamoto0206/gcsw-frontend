@@ -22,7 +22,7 @@ const ReturningParticipant = () => {
           // Store the participant info in state
           setParticipantInfo(response.data);
 
-          // Navigate to participant-homepage and pass the userID
+          // Navigate to participant-homepage and pass the userID and firstName
           window.location = `/participant-homepage?participant_id=${participantId}`;
         } else {
           // Participant doesn't exist, display a message

@@ -14,10 +14,7 @@ const NavBar = () => {
                     <a className="navbar-brand custom-navbar-brand" href="/">
                         <img src="https://ci.greenfield.ca.us/ImageRepository/Document?documentID=1390" width="200" height="100" alt="gcsw-logo" className="d-inline-block align-top" />
                     </a>
-                    {/* <MainNav /> */}
-                    <div className="custom-auth-nav">
-                        <AuthNav />
-                    </div>
+                    <MainNav> </MainNav>
                 </div>
             </nav>
         </div>
