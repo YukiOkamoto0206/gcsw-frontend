@@ -4,10 +4,10 @@ import axios from "axios";
 import { withAuth0 } from "@auth0/auth0-react";
 import { Row, Col, Form, Button } from 'react-bootstrap';
 import { Alert, Snackbar } from "@mui/material";
-// import ReactDatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css"
 import './first-time-participant.css';
 import './navbar.css';
+import './first-time-volunteer.css'
 
 /**
  * Component for volunteer sign-up page
@@ -134,9 +134,9 @@ class VolunteerSignup extends Component {
 
             try {
                 const response = await axios.post(`${process.env.REACT_APP_SERVER_URL}/volunteers/signin`, volunteer);
-                alert("You have successfully signed up, " + volunteer.first_name + "! Don't forget to sign out!");
+                alert("You have successfully signed up, " + volunteer.first_name + "!");
                 console.log(response.data);
-                window.location = '/volunteer-homepage';
+                window.location = '/volunteers-first-page';
             } catch (error) {
                 console.error('There was an error during sign up:', error);
                 alert('There was an issue with the sign-up process. Please try again.');
@@ -166,12 +166,12 @@ class VolunteerSignup extends Component {
                     <NavBar />  {/* Include NavBar */}
                 </div>
 
-                <div className="container">
-                    <h3 className="mb-3">Volunteer Sign Up</h3>
+                <div class="form-container">
+                    <h1 class="form-heading">Volunteer Sign Up</h1>
                     <Form onSubmit={this.handleSubmit}>
                         <Row>
                             <Col>
-                                <Form.Group className="mb-3" controlId="formId">
+                                <Form.Group controlId="formId">
                                     <Form.Label><b>User ID / ID de Usuario:</b> <i>(First Name)(Last Name)(Year of Birth)</i></Form.Label>
                                     <Form.Control
                                         type="text"
@@ -183,12 +183,15 @@ class VolunteerSignup extends Component {
                             
                         </Row>
 
-                        <Form.Group className="mb-3" controlId="formName">
+                        <Form.Group controlId="formName">
                             <Row>
                                 <Col>
-                                    <Form.Label><b>First Name / Nombre de Pila:</b></Form.Label>
+                                    <Form.Label class="form-label" for="firstName"><b>First Name / Nombre de Pila:</b></Form.Label>
                                     <Form.Control
+                                        class="form-input"
                                         type="text"
+                                        id="firstName"
+                                        name="firstName"
                                         required
                                         value={this.state.first_name}
                                         onChange={this.onChangeFirstName} />
@@ -203,7 +206,7 @@ class VolunteerSignup extends Component {
                                 </Col>
                             </Row>
                         </Form.Group>
-                        <Form.Group className="mb-3" controlId="formGenderAndAge">
+                        <Form.Group controlId="formGenderAndAge">
                             <Row>
                                 <Col>
                                     <Form.Label><b>Gender / Genero:</b></Form.Label>
@@ -244,11 +247,11 @@ class VolunteerSignup extends Component {
                             </Row>
                         </Form.Group>
 
-                        <Form.Group className="mb-3" controlId="formButton">
+                        <Form.Group controlId="formButton">
                             <Button variant="primary" type="submit">Sign Up</Button>
                             <Snackbar open={this.state.open} autoHideDuration={6000} onClose={this.handleClose}>
                                 <Alert onClose={this.handleClose} severity="error">
-                                    You have successfully signed up and signed in today!
+                                    You have successfully signed up!
                                 </Alert>
                             </Snackbar>
                         </Form.Group>

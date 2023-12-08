@@ -1,0 +1,66 @@
+/* New styles for the sign-up form container for better layout and spacing */
+.form-container {
+    max-width: 600px; /* Adjust this value as needed */
+    margin: 2em auto;
+    padding: 1em;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+}
+
+/* Improved form heading */
+.form-heading {
+    font-family: 'Arial', sans-serif;
+    color: #333;
+    margin-bottom: 1em;
+}
+
+/* Improved form labels and inputs */
+.form-label {
+    display: block;
+    margin-top: 0.5em;
+    color: #444;
+    font-size: 0.9rem;
+}
+
+.form-input,
+.form-select {
+    width: 100%;
+    padding: 0.5em;
+    margin-top: 0.2em;
+    margin-bottom: 1em;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+
+/* Styling the sign-up button */
+.form-button {
+    width: auto;
+    padding: 0.6em 1.2em;
+    background-color: #4CAF50; /* Adjust the color to match your branding */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    display: block; /* Makes the button block level, taking the full width */
+    margin: 1em 0;
+}
+
+.form-button:hover {
+    background-color: #45a049;
+}
+
+/* Responsive design adjustments */
+@media (max-width: 768px) {
+    .form-container {
+        width: 90%;
+        margin: 1em auto;
+        padding: 1em;
+    }
+
+    .form-heading {
+        font-size: 1.5em;
+    }
+}
