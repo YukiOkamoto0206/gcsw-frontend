@@ -5,18 +5,15 @@ import axios from 'axios';
 import { useLocation } from 'react-router-dom';
 import './volunteer-homepage.css'
 
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+const VolunteerHomePage = () => {
+    const location = useLocation();
+    const volunteerId = location.state?.volunteerId;
 
-const VolunteerHomepage = ({ location }) => {
-    // Assuming volunteerId is passed through location.state
-    const volunteerId = location.state.volunteerId;
-
-    // Initialize the state
+    // State to store volunteer data
     const [volunteer, setVolunteer] = useState({
         first_name: '',
         volunteer_title: '',
-        total_hours: 0,
+        total_hours: 0
     });
 
     useEffect(() => {
@@ -77,6 +74,8 @@ const VolunteerHomepage = ({ location }) => {
     
         return { next_title, nextLevelHours };
     }
+
+    const { next_title, nextLevelHours } = getTitleAndHoursToNextLevel(volunteer.total_hours);
     
     const handleLogout = async () => {
         const date = new Date().toISOString(); // Use the date when the logout button is clicked
@@ -93,35 +92,24 @@ const VolunteerHomepage = ({ location }) => {
         }
     };
 
-    useEffect(() => {
-        // Fetch volunteer data
-        axios.get(`/volunteers/volunteer_id/${volunteerId}`)
-          .then((response) => {
-            const fetchedVolunteer = response.data;
-            setVolunteer({
-              first_name: fetchedVolunteer.first_name,
-              volunteer_title: fetchedVolunteer.volunteer_title,
-              total_hours: fetchedVolunteer.total_hours,
-            });
-          })
-          .catch((error) => {
-            console.error('Error fetching volunteer data:', error);
-          });
-      }, [volunteerId]);
-    
-      // Calculate next title and hours
-      const { next_title, nextLevelHours } = getTitleAndHoursToNextLevel(volunteer.total_hours);
-    
-      return (
+    return (
         <div>
-          <h2>{`Name: ${volunteer.first_name}`}</h2>
-          <h2>{`Title: ${volunteer.volunteer_title}`}</h2>
-          <h2>{`Total Hours: ${volunteer.total_hours}`}</h2>
-          <h2>{`Next Title: ${next_title}`}</h2>
-          <h2>{`Hours to Next Level: ${nextLevelHours}`}</h2>
-          <Button class="button-primary" variant="danger" onClick={handleLogout}>Volunteer Log Out</Button>
+            <NavBar />
+            <div class="content">
+                <div class="div1">
+                    <h2>Welcome {volunteer.first_name}, {volunteer.volunteer_title}</h2>
+                </div>
+                <div class="div2">
+                    <h2>Number of hours completed: {Math.round(volunteer.total_hours)}</h2>
+                </div>
+                <div class="div3">
+                    <h2>Hours to next title ({next_title}): {nextLevelHours}</h2>
+                </div>
+                <br></br>
+                <Button class="button-primary" variant="danger" onClick={handleLogout}>Volunteer Log Out</Button>
+            </div>
         </div>
-      );
-    };
-    
-    export default VolunteerHomepage;
+    );
+};
+
+export default VolunteerHomePage;
