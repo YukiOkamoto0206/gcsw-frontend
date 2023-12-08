@@ -40,6 +40,7 @@ const App = () => {
         <Route path="/staff" element={<ProtectedRoute><StaffPage /></ProtectedRoute>} />
       </Routes>
     </div>
+
   );
 };
 
