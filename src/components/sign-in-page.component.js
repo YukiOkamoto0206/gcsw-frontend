@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import NavBar from './navbar.component';  // Import NavBar
 import './SignInPage.css';
+import AuthNav from './auth-nav.component';
 
 const SignInPage = () => {
   return (
@@ -9,6 +10,9 @@ const SignInPage = () => {
       <div className="nav-container">
         <NavBar />  {/* Include NavBar */}
       </div>
+
+      <AuthNav/>
+      
       <div className="sign-in-container">
         <h1 className="sign-in-header">Welcome to the Greenfield Community Workshop</h1>
         <div className="button-container">

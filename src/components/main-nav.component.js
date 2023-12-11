@@ -13,14 +13,14 @@ const MainNav = () => (
             Home
         </NavLink>
         <NavLink
-            to="/participants"
+            to="/participants-first-page"
             className="nav-link"
         >
             Participants
         </NavLink>
 
         <NavLink
-            to="/volunteers"
+            to="/volunteers-first-page"
             className="nav-link"
         >
             Volunteers
