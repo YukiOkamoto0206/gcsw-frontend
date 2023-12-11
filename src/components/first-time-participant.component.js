@@ -24,17 +24,10 @@ class ParticipantSignin extends Component {
      constructor(props) {
         super(props);
     
-        this.onChangeFirstName = this.onChangeFirstName.bind(this);
-        this.onChangeLastName = this.onChangeLastName.bind(this);
-        this.onChangeGender = this.onChangeGender.bind(this);
-        this.onChangeAge = this.onChangeAge.bind(this);
-        this.onChangeSchool = this.onChangeSchool.bind(this);
-        this.onChangeObjective = this.onChangeObjective.bind(this);
-        this.onChangeDate = this.onChangeDate.bind(this);
-        this.onSubmitParticipant = this.onSubmitParticipant.bind(this);
-        this.handleClose = this.handleClose.bind(this);
+
     
         this.state = {
+            participant_id: '',
             first_name: '',
             last_name: '',
             gender: '',
@@ -60,6 +53,13 @@ class ParticipantSignin extends Component {
 
         return dates[currentDate] !== undefined;
     }
+
+    onChangeParticipantId = (e) => {
+        this.setState({
+            participant_id: e.target.value
+        });
+    }
+    
 
     /**
      * update first name
@@ -171,7 +171,9 @@ class ParticipantSignin extends Component {
                 .then(response => {
                     alert( participant.first_name + " has signed in! Don't forget to sign out!");
                     console.log(response.data);
-                    window.location = '/';
+                    window.location = `/participant-homepage?participant_id=${this.state.participant_id}`;
+
+
                 })
                 .catch((error) => {
                     console.log(error);
@@ -206,19 +208,20 @@ class ParticipantSignin extends Component {
                 {this.state.is_signed_in && (<h3 className="mb-3">Log Out</h3>)}
                 {/* <h3 className="mb-3">Sign In/Log Out</h3> */}
                 <Form>
-                    {/* <Row>
+                    <Row>
                         <Col>
                             <Form.Group className="mb-3" controlId="formId">
-                                <Form.Label>User ID / ID de Usuario:</Form.Label>
+                                <Form.Label>Participant ID / ID de Participante:</Form.Label>
                                 <Form.Control
                                     type="text"
                                     required
+                                    placeholder='firstname+lastname+dateofbirth'
                                     defaultValue={this.state.participant_id}
                                     onBlur={this.onChangeParticipantId} />
                             </Form.Group>
                         </Col>
                         
-                    </Row> */}
+                    </Row>
 
                     <Form.Group className="mb-3" controlId="formName">
                         <Row>
