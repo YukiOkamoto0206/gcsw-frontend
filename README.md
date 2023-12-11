@@ -129,3 +129,10 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/t
 ## bug for print button
 - make it  where allow multiple prints without refreshing page
  
+
+### Branches
+`master` branch is currently legacy code 
+
+`dev` branch is the most up to date and should be the branch new brnahces are made from. 
+
+All other branches can be removed for simplicity as they should not contain any relevant code more up to date than `dev` branch
