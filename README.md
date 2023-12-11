@@ -7,14 +7,36 @@ This is the frontend component of Greenfield Community Science Workshop Database
 ## Routes
 
 ### `/` Sign In Page (Unprotected Route)
+The defualt route is the sign-in-page this is a page to offer two button choices to decide which route to send people down. There is also a login button for staff in the top right of the page. This page is unprotected and all pages following the volunteer and the participant buttons on this page are also unprotected. Participants shouldn't have to log in to sign in for the day. Upon entering their ID, their information gets filled out automatically if they had already been registered in the MongoDB database(Test this may not work or be impleneted currently). Participants are only allowed to sign in once per day.
 
-The default route is the sign in page for participants who come into the workshop. This is the only unprotected route; participants shouldn't have to log in to sign in for the day. Upon entering their ID, their information gets filled out automatically if they had already been registered in the MongoDB database. Participants are only allowed to sign in once per day.
+### `/volunteers-first-page` Sign in page (Unprotected Route)
+Volunteers first page that should have buttons to decide between first time sign in for the day and returning routes.
 
-### `/participants` Participant Attendance Page (Protected Route, requires Login)
+### `/first-time-volunteer` Sign in page (Unprotected Route)
+Sign in page for volunteers. Should sign in here once per day.
+
+### `/volunteers-homepage` Homepage for volunteers (Unprotected Route)
+Homepage for volunteers. Needs to be implemented still barebones currently. Homepage is functional for time tracking log out button will record a timestamp for logout and calculate in backend time between(Test this).
+
+### `/participants-first-page` Decision buttons page for participants (Unprotected Route)
+This is another decision page for participants to decide if they are signing in for the first time today or if they are returning after signing in once today already.
+
+### `/first-time-participant` Sign in page for participants (Unprotected Route)
+Sign in page for participants. This page will lead to participants homepage on succesful submission.
+
+### `/returning-participant` Login to participants homepage (Unprotected Route)
+Login page for returning participants that have already signed in today / those wanting to get to their participant homepage. Also can signout to stop the timestamp for todays tracking of signin timestamp(Logout and hour tracking not implemented yet).
+
+### `/participant-homepage` Participants homepage (Unprotected Route)
+Homepage for participants. This page has buttons for getting to other participant related pages. This page has badges(need to be implemented functionaly). This page also need to have a sign out button added that works with backend to record signout time for participants. Remove the staff login button from homepage and all pages nested past homepage.
+
+### Protected Routes Below
+
+### `/participants` Participant Attendance Page (Protected Route, requires Login) (MAY NEED TO ADD BUTTON IN NAVBAR TO LINK TO THESE & THE VOLUNTEER VERSIONS)
 
 This route leads to the participant attendance page, listing all of the participants who have signed in on the selected date through the Date Picker. Each participant entry in the table has options to edit their information, leading to the  `/edit` route, and to delete the selected entry. This page also includes a button to export a list of participants to an Excel file. 
 
-###  `/edit/{id}` Edit Participant Page (Protected Route, requirs Login)
+###  `/edit/{id}` Edit Participant Page (Protected Route, requirs Login) (MAY NEED TO ADD BUTTON IN NAVBAR TO LINK TO THESE & THE VOLUNTEER VERSIONS)
 
 This route leads to the edit participant page, allowing one to edit and update a previously registered participant's information. Changes are reflected throughout the app, included the Participant Attendance and Sign In pages. Here is where one can delete a participant permanently as well, erasing all of their sign-in entries and information from the app. The route requires the participant's Object ID from their MongoDB document to be passed in as a URL parameter.
 

@@ -1,3 +1,7 @@
+//  This file containts legacy code from when volunteer and partiipant was handled on the same page
+
+
+
 import React, { Component } from "react";
 import axios from "axios";
 import { withAuth0 } from "@auth0/auth0-react";
